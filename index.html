@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ST229 Visualisations</title>
+<meta name="description" content="Interactive visualisations for ST229 Probability for Mathematical Statistics at Warwick.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+/* A plain index: one row per visualisation, in the order the module meets them. */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --ink:#16202e; --muted:#5a6676; --rule:#d6dce5; --accent:#5b3fd6;
+  --mean:#b45309; --res:#0f7b55;
+  --display:"Instrument Serif","Iowan Old Style",Georgia,serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{color-scheme:dark;--bg:#0f141b;--surface:#171e28;--ink:#e8edf3;--muted:#98a4b4;--rule:#2c3644;--accent:#8f7cf5;--mean:#cc8230;--res:#2fae80}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 var(--body)}
+main{max-width:860px;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(16px,4vw,32px) 48px;display:flex;flex-direction:column;gap:28px}
+.course{font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:400 clamp(2.2rem,5vw,3.2rem)/1.05 var(--display);margin:6px 0 10px;text-wrap:balance}
+.intro{color:var(--muted);max-width:60ch;margin:0}
+ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+a.item{display:grid;grid-template-columns:112px 1fr auto;gap:18px;align-items:center;background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:14px 18px;color:inherit;text-decoration:none}
+a.item:hover{border-color:var(--accent)}
+a.item:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.item svg{width:112px;height:84px;display:block;border-radius:8px;background:var(--bg)}
+.where{font-size:.8rem;color:var(--muted)}
+h2{font:400 1.55rem/1.15 var(--display);margin:2px 0 4px}
+.item p{margin:0;color:var(--muted);font-size:.93rem;max-width:56ch}
+.go{color:var(--accent);font-weight:500;white-space:nowrap}
+footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--rule);padding-top:16px}
+footer a{color:inherit}
+@media (max-width:560px){a.item{grid-template-columns:1fr}.item svg{width:100%;height:110px}.go{justify-self:start}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="course">ST229 &middot; Probability for Mathematical Statistics</div>
+    <h1>Interactive visualisations</h1>
+    <p class="intro">Pictures to play with alongside the lecture notes. Each one opens in the browser; nothing needs installing.</p>
+  </header>
+
+  <ol>
+    <li><a class="item" href="gaussian-conditioning/">
+      <svg viewBox="0 0 112 84" aria-hidden="true">
+        <ellipse cx="56" cy="42" rx="40" ry="17" transform="rotate(24 56 42)" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <ellipse cx="38" cy="30" rx="15" ry="7" transform="rotate(-32 38 30)" fill="none" stroke="var(--mean)" stroke-width="2"/>
+        <ellipse cx="56" cy="42" rx="15" ry="7" transform="rotate(-32 56 42)" fill="none" stroke="var(--mean)" stroke-width="2"/>
+        <ellipse cx="74" cy="54" rx="15" ry="7" transform="rotate(-32 74 54)" fill="none" stroke="var(--mean)" stroke-width="2"/>
+      </svg>
+      <div>
+        <div class="where">Chapter 5 &middot; Multivariate Gaussian distribution</div>
+        <h2>Reversal of correlation</h2>
+        <p>Two variables can be positively correlated at every fixed value of a third and negatively correlated overall. See how conditioning a trivariate Gaussian does it.</p>
+      </div>
+      <span class="go">Open &rarr;</span>
+    </a></li>
+
+    <li><a class="item" href="fisher-sampling-theorem/">
+      <svg viewBox="0 0 112 84" aria-hidden="true">
+        <line x1="14" y1="70" x2="100" y2="70" stroke="var(--muted)" stroke-width="1.2"/>
+        <line x1="22" y1="78" x2="22" y2="8" stroke="var(--muted)" stroke-width="1.2"/>
+        <circle cx="62" cy="34" r="20" fill="none" stroke="var(--muted)" stroke-width="1.2" opacity=".6"/>
+        <line x1="22" y1="70" x2="46" y2="88" stroke="var(--res)" stroke-width="2" opacity=".6"/>
+        <line x1="22" y1="70" x2="6" y2="58" stroke="var(--res)" stroke-width="2" opacity=".6"/>
+        <line x1="22" y1="70" x2="64" y2="14" stroke="var(--mean)" stroke-width="1.5" opacity=".6"/>
+        <line x1="22" y1="70" x2="52" y2="30" stroke="var(--mean)" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="52" y1="30" x2="72" y2="45" stroke="var(--res)" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="72" cy="45" r="5" fill="var(--accent)"/>
+      </svg>
+      <div>
+        <div class="where">Chapter 7 &middot; Section 7.4</div>
+        <h2>Fisher's Sampling Theorem</h2>
+        <p>The proof in six steps: treat the sample as a point, split it into mean and residual, and rotate. In 2D and 3D, with a simulation check of all four claims.</p>
+      </div>
+      <span class="go">Open &rarr;</span>
+    </a></li>
+  </ol>
+
+  <footer>Department of Statistics, University of Warwick. Source on <a href="https://github.com/pchleboun/st229-visualisations">GitHub</a>.</footer>
+</main>
+</body>
+</html>

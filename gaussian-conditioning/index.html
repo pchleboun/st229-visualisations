@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ST229 · Reversal of correlation</title>
+<style>
+:root{color-scheme:light;--ink:#192e39;--muted:#49606b;--blue:#185aa1;--red:#a94216;--edge:#d0dada;--paper:#f6f8f7;--serif:Georgia,'Times New Roman',serif}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.4 'Segoe UI',Arial,sans-serif}main{max-width:1460px;margin:auto;padding:clamp(15px,3vw,42px);padding-top:clamp(14px,2vw,28px)}header,.panel-head,.controlbar,.checks,.sliderline,.stagefooter{display:flex;align-items:center;gap:14px;flex-wrap:wrap}header,.panel-head,.stagefooter{justify-content:space-between}.course,.kicker{font-size:.74rem;font-weight:700;letter-spacing:.095em;text-transform:uppercase;color:var(--muted)}h1,h2{font:normal clamp(31px,3.3vw,52px)/1.1 var(--serif);letter-spacing:-.035em;margin:4px 0 0}h2{font-size:clamp(22px,2vw,32px);letter-spacing:-.025em}.intro{margin:8px 0 18px;color:var(--muted)}label,button,select,summary{font:inherit}select,button{background:white;border:1px solid #aebfc3;border-radius:6px;color:var(--ink);padding:6px 9px}button,select,summary,input{cursor:pointer}select:hover,button:hover{background:#f1f5f5}button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,canvas:focus-visible{outline:3px solid #5792c5;outline-offset:3px}.model{display:grid;gap:4px;font-size:.88rem;font-weight:600}.controlbar{background:#eaf0ef;border:1px solid var(--edge);border-radius:9px;padding:11px 16px;justify-content:space-between}.sliderbox{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.sliderline{gap:9px;flex-wrap:nowrap}.sliderline span{color:var(--muted);font-size:.8rem}.sliderbox output{font-variant-numeric:tabular-nums;min-width:5.3em;color:#264a51;font-weight:600}.sliderbox label{font-weight:600}input[type=range]{accent-color:#275b60;width:clamp(125px,16vw,260px)}.checks{gap:17px}.checks label{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:.94rem;font-weight:600}.checks input{width:17px;height:17px;margin:0}.blue{color:var(--blue);accent-color:var(--blue)}.red{color:var(--red);accent-color:var(--red)}.neutral{accent-color:#365962}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}.panel{display:flex;flex-direction:column;background:#fff;border:1px solid var(--edge);border-radius:10px;min-width:0;overflow:hidden}.panel-head{padding:14px 18px 0;gap:8px}.panel-head select{font-size:.86rem}.figure{position:relative;min-width:0;height:clamp(245px,48vh,540px)}canvas{display:block;width:100%;height:100%}#space{touch-action:none;cursor:grab}#space:active{cursor:grabbing}.stagefooter{align-items:center;min-height:56px;border-top:1px solid #e1e8e7;padding:9px 17px;font-size:.89rem;color:var(--muted);gap:6px 14px}.rho{font-weight:650}.rhogroup{display:flex;gap:8px 16px;flex-wrap:wrap}.math{font-family:var(--serif)}details{margin-top:15px;border-top:1px solid #bccbc9;padding:12px 0}summary{font-weight:600;width:fit-content}.mathgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.mathgrid p{margin:.65em 0}.equation{font:1.17rem/1.5 var(--serif)}.matrix{border-left:1.5px solid;border-right:1.5px solid;border-radius:5px;display:inline-grid;grid-template-columns:repeat(3,auto);column-gap:12px;text-align:center;padding:0 6px;vertical-align:middle;margin:0 4px;font-variant-numeric:tabular-nums}.note{color:var(--muted)}[hidden]{display:none!important}@media(max-width:900px){.controlbar{gap:9px}.panels{gap:9px}.panel-head{padding:11px 12px 0}.stagefooter{padding:8px 12px}}@media(max-width:690px){.panels,.mathgrid{grid-template-columns:1fr}.figure{height:320px}.sliderbox{gap:5px 12px}.checks{gap:11px}.intro{margin-bottom:12px}}@media(max-width:400px){.figure{height:285px}.controlbar{padding:10px}.checks{gap:8px}.checks label{font-size:.84rem}}
+
+main{max-width:1460px;padding:clamp(14px,2vw,30px)}header{gap:8px}.intro{margin:5px 0 12px}.adjust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;background:#eaf0ef;border:1px solid var(--edge);border-radius:9px;padding:10px 16px}.adjust label{display:flex;justify-content:space-between;align-items:baseline;gap:7px;flex-wrap:wrap;font-size:.96rem;font-weight:600}.adjust output{font-variant-numeric:tabular-nums;color:#275b60}.track{display:flex;align-items:center;gap:9px;min-height:29px;font-size:.77rem;color:var(--muted)}.track input{flex:1;width:50px;min-width:40px;margin:0}.track button{font-size:.74rem;padding:3px 6px}.tools,.counts,.checkgroup{display:flex;align-items:center;flex-wrap:wrap;gap:9px}.tools{justify-content:space-between;padding:7px 1px 0}.counts{gap:7px;font-size:.93rem}.counts button{line-height:1;padding:5px 8px;font-weight:700}.counts output{min-width:.7em;text-align:center}.counts button:disabled{opacity:.38;cursor:default}.panels{margin-top:8px}.panel-head{min-height:60px}.stagefooter{align-content:start;display:block;min-height:0;padding:8px 14px;flex:1}.caption{color:var(--muted);font-size:.91rem;line-height:1.35;margin:4px 0}.key{line-height:1.45;font-weight:600}.figure{height:clamp(245px,43vh,520px)}.rhogroup{font-size:1rem}.status{margin:4px 0 0}.disabled{opacity:.55}details{margin-top:9px;padding:8px 0}.intro,.note,.caption{max-width:92em}.mathgrid .equation{overflow-wrap:anywhere}.mathgrid h3{margin:.8em 0 .2em;font-size:1.01rem}.model{font-size:.82rem}.model select{font-size:.93rem}
+@media(max-width:840px){.adjust{gap:10px}.adjust label{font-size:.88rem}.checks{gap:9px}.checks label{font-size:.88rem}}
+@media(max-width:690px){.adjust{grid-template-columns:1fr;gap:5px}.adjust>div{display:grid;grid-template-columns:minmax(140px,1fr) 1fr;gap:8px;align-items:center}.adjust label{justify-content:flex-start}.figure{height:320px}.stagefooter{padding:8px 12px}.tools{gap:6px}.panels{gap:12px}}@media(max-width:380px){.adjust{padding:8px}.adjust>div{grid-template-columns:minmax(125px,1fr) 1fr}.figure{height:280px}}
+</style></head>
+<body><main>
+<header><div><div class="course">ST229 · Probability for Mathematical Statistics</div><h1>Reversal of correlation</h1></div><label class="model">Gaussian model<select id="model"><option value="classroom">Clear reversal</option><option value="notes">Exercise-class notes</option><option value="script">Python example</option><option value="custom" hidden>Custom settings</option></select></label></header>
+<p class="intro">Does the association between exercise (X₁) and bone density (X₂) change when we fix weight (X₃)?</p>
+<div class="adjust">
+<div><label for="weight">Fixed weight <output id="weightRead" for="weight"></output></label><div class="track"><span>−1.5</span><input type="range" id="weight" value="0" min="-1.5" max="1.5" step=".05"><span>+1.5</span><button id="reset" type="button" title="Return to mean weight">Centre</button></div></div>
+<div><label for="within">Within-weight correlation <output id="withinRead" for="within"></output></label><div class="track"><span>0</span><input type="range" id="within" min="0" max=".95" step=".001" value=".6"><span>0.95</span></div></div>
+<div><label for="share">Variance explained by weight <output id="shareRead" for="share"></output></label><div class="track"><span>0%</span><input type="range" id="share" min="0" max="90" step=".1" value="75" aria-describedby="shareHelp"><span>90%</span></div></div>
+</div>
+<div class="tools"><div class="counts" role="group" aria-label="Number of density contours"><strong>Contours</strong><button id="less" type="button" aria-label="Show fewer contours">−</button><output id="count" aria-live="polite">3</output><button id="more" type="button" aria-label="Show more contours">+</button></div>
+<div class="checks"><label class="blue"><input id="marginal" type="checkbox" checked>Marginal</label><label class="red"><input id="conditional" type="checkbox" checked>Conditional</label><label class="neutral"><input id="regression" type="checkbox" checked>Regression lines</label><label class="neutral"><input id="draws" type="checkbox">Sample points</label></div></div>
+<div class="panels"><section class="panel"><div class="panel-head"><div><div class="kicker">Joint distribution</div><h2>Projection and slice</h2></div><select id="camera" aria-label="Viewing angle"><option value="orbit">Oblique view</option><option value="xy">Top · X₁X₂</option><option value="xz">Side · X₁X₃</option><option value="yz">Side · X₂X₃</option><option value="free" hidden>Free rotation</option></select></div>
+<div class="figure"><canvas id="space" tabindex="0" aria-label="Nested surfaces of equal joint Gaussian density. Dashed blue shows its projection and solid orange its horizontal section. Drag or use arrow keys to rotate."></canvas></div>
+<div class="stagefooter"><div class="key"><span class="blue">Dashed projection</span> · <span class="red">solid slice</span></div><p class="caption" id="shellInfo"></p></div></section>
+<section class="panel"><div class="panel-head"><div><div class="kicker">Exercise and bone density</div><h2>Density contours</h2></div></div><div class="figure"><canvas id="flat" role="img" aria-label="Marginal and conditional density contours of exercise and bone density."></canvas></div>
+<div class="stagefooter"><div class="rhogroup"><span id="rhoM" class="blue rho"></span><span id="rhoC" class="red rho"></span><span id="noCurve" hidden>Select a distribution above.</span></div><p class="caption">Each curve joins points of equal density. <span id="levelPrefix">From inner to outer, the curves enclose</span> <strong id="levels"></strong> of the probability.</p></div></section></div>
+<details id="reason"><summary>What determines the sign?</summary><div class="mathgrid"><div><h3>Within and between weights</h3><p id="shareHelp">Let <i>r</i> be the within-weight correlation and <i>h</i> the fraction of the variance of each of X₁ and X₂ explained by weight. As weight rises, the mean of exercise falls and the mean of bone density rises when <i>h</i> &gt; 0.</p><p>Dividing the law of total covariance by the common marginal variance gives</p>
+<p class="equation">ρ<sub>marginal</sub> = (1 − <i>h</i>)<i>r</i> − <i>h</i>.</p><p id="decomp"></p><p>For positive <i>r</i>, reversal occurs when <i>h</i> exceeds <i>r</i>/(1 + <i>r</i>). <span id="threshold"></span></p></div>
+<div><h3>The Gaussian model</h3><p>All three variables are centred. Write <i>A</i> = Var(X₁) = Var(X₂) = 7/3, <i>v</i> = Var(X₃) and <i>t</i> = X₃/√<i>v</i>. At fixed <i>t</i>, the conditional mean is (−<i>t</i>√(<i>Ah</i>), <i>t</i>√(<i>Ah</i>)). The conditional variances are <i>A</i>(1 − <i>h</i>) and the conditional covariance is <i>Ar</i>(1 − <i>h</i>).</p><p class="equation" id="sigma"></p><p id="exact"></p></div></div></details>
+<details><summary>How to read the contours</summary><div class="mathgrid"><div><h3>Probability inside the curve</h3><p>A Gaussian distribution extends beyond every ellipse shown here. A 90% contour encloses 90% of the probability under its own distribution. The density is highest at the centre. A line itself has probability zero. Switch on <b>Sample points</b> to see draws both inside and outside the curves.</p><p>The straight lines show the regression of bone density on exercise. The dots at their centres mark the means.</p></div><div><h3>Projecting and slicing a shell</h3><p>The grey ellipsoids are surfaces of constant joint density. Their blue footprints give the marginal contours. The percentages on the right refer to the two-dimensional distributions. At mean weight the orange sections coincide in shape and size with the conditional contours on the right. Away from the mean, a plane can miss an inner shell entirely.</p><p>A right-panel contour enclosing probability <i>p</i> has squared Mahalanobis radius <i>q</i> = −2 log(1 − <i>p</i>). The matching joint shell has squared radius <i>q</i>. At standardised weight <i>t</i> its section has squared conditional radius <i>q</i> − <i>t</i>² if this is nonnegative. The right panel keeps <i>q</i> fixed for each probability.</p></div></div></details>
+</main><script>
+'use strict';
+const el = id => document.getElementById(id);
+const models = {
+ classroom: {r: .6, h: .75, v: 13/3},
+ notes: {r: 2/11, h: 25/91, v: 13/3},
+ script: {r: 17/43, h: 27/70, v: 10}
+};
+const A=7/3, tau=2*Math.PI;
+const blue='#185aa1', red='#a94216', ink='#29414b', grid='#dce5e5';
+const views={orbit:[.62,.49],xy:[0,Math.PI/2],xz:[0,0],yz:[-Math.PI/2,0]};
+let [az,tilt]=views.orbit, pending=0, count=3, parameters={...models.classroom};
+// Adding a level retains all the contours already visible, including the outer 90% contour.
+const masses=[.9,.5,.25,.75,.1];
+const levelSets=masses.map((_,i)=>masses.slice(0,i+1).sort((a,b)=>a-b).map(p=>({p,radius:Math.sqrt(-2*Math.log1p(-p))})));
+const circle=Array.from({length:97},(_,i)=>[Math.cos(tau*i/96),Math.sin(tau*i/96)]);
+function getState(){
+ const {v,h,r}=parameters, cv=A*(1-h), cc=cv*r, B=cc-A*h;
+ const sd=Number(el('weight').value), z=sd*Math.sqrt(v), g=Math.sqrt(A*h*v);
+ return {v,g,sd,z,shift:Math.sqrt(A*h)*sd,cv,cc,B,h,within:r,levels:levelSets[count-1],
+ m:el('marginal').checked,c:el('conditional').checked,r:el('regression').checked,draws:el('draws').checked};
+}
+function ellipse(a,b,r,mx=0,my=0,z=0){
+ const p=r*Math.sqrt((a+b)/2),q=r*Math.sqrt((a-b)/2);
+ return circle.map(([c,s])=>[mx+p*c+q*s,my+p*c-q*s,z]);
+}
+function section(s,t,radius){
+ const remainder=radius*radius-t*t;
+ if(remainder < -1e-12)return [];
+ const z=t*Math.sqrt(s.v), shift=s.g*z/s.v;
+ return ellipse(s.cv,s.cc,Math.sqrt(Math.max(0,remainder)),-shift,shift,z);
+}
+// Fixed standard-normal draws make slider movements reproducible and avoid flicker.
+function normalPairs(seed){
+ function uniform(){seed=(Math.imul(1664525,seed)+1013904223)>>>0;return (seed+.5)/4294967296;}
+ return Array.from({length:180},()=>{const r=Math.sqrt(-2*Math.log(uniform())),angle=tau*uniform();return [r*Math.cos(angle),r*Math.sin(angle)];});
+}
+const drawsM=normalPairs(841),drawsC=normalPairs(229);
+function context(id){
+ const canvas=el(id),w=canvas.clientWidth,h=canvas.clientHeight,d=Math.min(devicePixelRatio||1,2);
+ if(canvas.width!==Math.round(w*d)||canvas.height!==Math.round(h*d)){canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);}
+ const ctx=canvas.getContext('2d');ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);return {ctx,w,h};
+}
+function path(ctx,points,color,width=1,dash=[],fill=''){
+ if(!points.length)return;
+ ctx.beginPath();ctx.moveTo(...points[0]);for(let i=1;i<points.length;i++)ctx.lineTo(...points[i]);
+ if(fill){ctx.closePath();ctx.fillStyle=fill;ctx.fill();}
+ if(color){ctx.setLineDash(dash);ctx.lineWidth=width;ctx.strokeStyle=color;ctx.stroke();ctx.setLineDash([]);}
+}
+function label(ctx,t,x,y,align='center',size=13,color=ink,weight='normal'){
+ ctx.font=weight+' '+size+'px "Segoe UI", Arial, sans-serif';ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillStyle=color;ctx.fillText(t,x,y);
+}
+function dot(ctx,[x,y],color){
+ ctx.beginPath();ctx.arc(x,y,4.4,0,tau);ctx.fillStyle=color;ctx.fill();ctx.lineWidth=1.3;ctx.strokeStyle='white';ctx.stroke();
+}
+function renderSpace(s){
+ const {ctx,w,h}=context('space'),ca=Math.cos(az),sa=Math.sin(az),ce=Math.cos(tilt),se=Math.sin(tilt);
+ // Display X3 in standard deviations to keep the camera framing stable across models.
+ const raw=([x,y,z])=>[ca*x-sa*y,-se*(sa*x+ca*y)-ce*1.8*z/Math.sqrt(s.v)];
+ const floor=-2.28*Math.sqrt(s.v), cap=2.38*Math.sqrt(s.v);
+ const {B,levels}=s, outer=levels[levels.length-1].radius;
+ const shadows=levels.map(l=>ellipse(A,B,l.radius,0,0,floor)),shadow=shadows[shadows.length-1];
+
+ const axisEnds=[[3.85,0,floor],[0,3.85,floor],[0,0,cap]];
+ const axesStart=[[-3.65,0,floor],[0,-3.65,floor],[0,0,floor]];
+ const corners=[[-3.45,-3.45,s.z],[3.45,-3.45,s.z],[3.45,3.45,s.z],[-3.45,3.45,s.z]];
+ // Frame every height with the same bounds so the camera stays still during a drag of the slider.
+ const xAxis=[ca,-sa,0],yAxis=[-se*sa,-se*ca,-ce*1.8/Math.sqrt(s.v)];
+ const S=[[A,B,-s.g],[B,A,s.g],[-s.g,s.g,s.v]];
+ function bilinear(u,v){return u.reduce((sum,ui,i)=>sum+ui*S[i].reduce((dot,a,j)=>dot+a*v[j],0),0);}
+ const l11=Math.sqrt(bilinear(xAxis,xAxis)),l21=bilinear(xAxis,yAxis)/l11,l22=Math.sqrt(bilinear(yAxis,yAxis)-l21*l21);
+ const bounds=[...axisEnds,...axesStart,...corners.flatMap(([x,y])=>[[x,y,1.5*Math.sqrt(s.v)],[x,y,-1.5*Math.sqrt(s.v)]])].map(raw);
+ const xRadius=outer*l11,yRadius=outer*Math.hypot(l21,l22);
+ const xs=[-xRadius,xRadius,...bounds.map(p=>p[0])],ys=[-yRadius,yRadius,...shadow.map(p=>raw(p)[1]),...bounds.map(p=>p[1])],x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+ const k=Math.min((w-68)/(x1-x0),(h-35)/(y1-y0));
+ const proj=p=>{const [x,y]=raw(p);return [w/2+k*(x-(x0+x1)/2),h/2+k*(y-(y0+y1)/2)];};
+ const line=(pts,color,width=1,dash=[],fill='')=>path(ctx,pts.map(proj),color,width,dash,fill);
+ for(let i=0;i<3;i++)line([axesStart[i],axisEnds[i]],'#9bafb1',1.1);
+ if(s.m){
+  for(const ring of shadows)line(ring,blue,1.65,[5,3],'rgba(24,90,161,.025)');
+  for(let i=0;i<96;i+=24){let [x,y]=shadow[i];line([shadow[i],[x,y,s.g*(y-x)/(A-B)]],'rgba(24,90,161,.35)',1,[3,4]);}
+ }
+ // Orthographic outline: project the joint covariance then draw its 2D ellipse via Cholesky.
+ const origin=proj([0,0,0]);
+ for(const {radius} of [...levels].reverse()){
+  const outline=circle.map(([c,sn])=>[origin[0]+radius*k*l11*c,origin[1]+radius*k*(l21*c+l22*sn)]);
+  path(ctx,outline,radius===outer?'#6e8588':'#9badae',radius===outer?1.4:.85,[],'rgba(134,161,161,.05)');
+ }
+ // Two meridians suffice to show depth on the outer shell.
+ for(const sign of [1,-1]){
+  const scale=outer*Math.sqrt((s.cv+sign*s.cc)/2);
+  const meridian=circle.map(([c,sn])=>{
+   const t=outer*sn,shift=Math.sqrt(A*s.h)*t;
+   return [-shift+scale*c,shift+sign*scale*c,Math.sqrt(s.v)*t];
+  });
+  line(meridian,'rgba(74,109,112,.36)',.85);
+ }
+ if(s.c){
+  line([...corners,corners[0]],'rgba(169,66,22,.35)',1,[],'rgba(212,124,72,.055)');
+  for(const {radius} of levels)line(section(s,s.sd,radius),red,1.9,[],'rgba(202,92,39,.045)');
+  dot(ctx,proj([-s.shift,s.shift,s.z]),red);
+ }
+ ['Exercise','Bone density','Weight'].forEach((t,i)=>{
+  // Hide the axis pointing directly towards the viewer in a face-on view.
+  if(i===2&&Math.abs(ce)<.001||i===0&&Math.abs(ca)+Math.abs(se)<.001||i===1&&Math.abs(sa)+Math.abs(se)<.001)return;
+  const [x,y]=proj(axisEnds[i]);
+  const half=t.length*4.3+4;
+  const tx=Math.max(half,Math.min(w-half,x+(i===0?21:i===1?-20:0)));
+  label(ctx,t,tx,Math.max(10,Math.min(h-10,y+(i===2?-7:10))),'center',14,ink,'600');
+ });
+}
+function renderFlat(s){
+ const {ctx,w,h}=context('flat'),k=Math.min((h-62)/8.5,(w-68)/8.5),cx=w/2+6,cy=h/2-4;
+ const xy=([x,y])=>[cx+k*x,cy-k*y],edge=4.25;
+ for(let n=-4;n<=4;n++){
+  const col=n===0?'#869ca2':grid;
+  path(ctx,[xy([n,-edge]),xy([n,edge])],col,n===0?1.25:.8);
+  path(ctx,[xy([-edge,n]),xy([edge,n])],col,n===0?1.25:.8);
+  if(n%2===0){const [x,y]=xy([n,-edge]);label(ctx,String(n).replace('-','−'),x,y+10);const [a,b]=xy([-edge,n]);label(ctx,String(n).replace('-','−'),a-7,b,'right');}
+ }
+ const [left,top]=xy([-edge,edge]);
+ label(ctx,'Bone density',left,top-14,'left',14,ink,'600');
+ label(ctx,'Exercise',cx,xy([0,-edge])[1]+26,'center',14,ink,'600');
+ function distribution(a,b,mx,my,col,dash,fill,sample){
+  const levels=s.levels,outer=levels[levels.length-1].radius;
+  if(s.draws){
+   ctx.save();ctx.beginPath();ctx.rect(left,top,2*edge*k,2*edge*k);ctx.clip();ctx.fillStyle=col;ctx.globalAlpha=.48;
+   const major=Math.sqrt((a+b)/2),minor=Math.sqrt((a-b)/2);
+   for(const [u,v] of sample){const [x,y]=xy([mx+major*u+minor*v,my+major*u-minor*v]);ctx.fillRect(x-1.35,y-1.35,2.7,2.7);}
+   ctx.restore();
+  }
+  for(const {radius} of [...levels].reverse())path(ctx,ellipse(a,b,radius,mx,my).map(xy),col,radius===outer?2:1.45,dash,fill);
+  if(s.r){
+   const dx=outer*Math.sqrt(a),dy=dx*b/a;
+   path(ctx,[xy([mx-dx,my-dy]),xy([mx+dx,my+dy])],col,2.8,dash);
+  }
+ }
+ if(s.c)distribution(s.cv,s.cc,-s.shift,s.shift,red,[],'rgba(202,92,39,.047)',drawsC);
+ if(s.m)distribution(A,s.B,0,0,blue,[6,4],'rgba(24,90,161,.035)',drawsM);
+ if(s.m)dot(ctx,xy([0,0]),blue);if(s.c)dot(ctx,xy([-s.shift,s.shift]),red);
+}
+function number(x,places=2,signed=false){
+ if(Math.abs(x)<.5*10**(-places))x=0;
+ return (signed&&x>0?'+':'')+x.toFixed(places).replace('-','−');
+}
+function matrix(values){
+ return '<span class="matrix">'+values.map(v=>'<span>'+v+'</span>').join('')+'</span>';
+}
+function sync(){
+ const s=getState(), model=el('model').value, marginal=s.B/A, isNotes=model==='notes', isScript=model==='script';
+ const signText=x=>Math.abs(x)<1e-12?'0.00':Math.abs(x)<.0005?(x<0?'−':'+')+Math.abs(x).toPrecision(2):number(x,3,true).replace(/(\.\d{2})0$/,'$1');
+ const exactM=isNotes||isScript?'−1/7':signText(marginal), exactC=isNotes?'+2/11':isScript?'+17/43':signText(s.within);
+ el('weightRead').value=number(s.sd,2,true)+' SD';el('weight').setAttribute('aria-valuetext',el('weightRead').value+' from mean weight');
+ el('withinRead').value=signText(s.within);el('shareRead').value=number(s.h*100,1)+'%';
+ el('share').setAttribute('aria-valuetext',el('shareRead').value+' of the variance of each variable');
+ el('rhoM').textContent='Marginal  ρ = '+exactM;el('rhoM').hidden=!s.m;
+ el('rhoC').textContent='Conditional  ρ = '+exactC;el('rhoC').hidden=!s.c;
+ el('noCurve').hidden=s.m||s.c;
+ el('flat').setAttribute('aria-label','Exercise horizontally and bone density vertically. '+(s.m?'Marginal correlation '+exactM+'. ':'')+(s.c?'Conditional correlation '+exactC+'. ':''));
+ el('count').value=count;el('less').disabled=count===1;el('more').disabled=count===5;
+ el('levelPrefix').textContent=count===1?'Each displayed ellipse encloses':'From inner to outer, the curves enclose';
+ el('levels').textContent=s.levels.map(l=>Math.round(l.p*100)+'%').join(', ').replace(/, ([^,]+)$/, ' and $1');
+ const cuts=s.levels.filter(l=>l.radius>Math.abs(s.sd)).length;
+ const surface=count===1?'surface':'surfaces';
+ let message=count+' joint density '+surface+'. Drag to rotate.';
+ if(s.c&&s.sd===0)message+=' At mean weight the sections match the orange contours on the right.';
+ if(s.c&&s.sd!==0)message+=' This plane cuts '+cuts+' of '+count+'. The sections shrink away from mean weight. The right-hand contours keep their size.';
+ el('shellInfo').textContent=message;
+ const within=number((1-s.h)*s.within,3);
+ el('decomp').textContent='The within-weight contribution is '+within+' and the between-weight contribution is '+number(-s.h,3)+', giving a marginal correlation of '+signText(marginal)+'.';
+ const threshold=s.within/(1+s.within);
+ el('threshold').textContent=s.within>0?'Here the crossing is at '+number(threshold*100,2)+'%.':'Here the conditional correlation is zero.';
+ if(isNotes||isScript){
+  const n=isNotes?5:9, v=isNotes?13:30;
+  el('sigma').innerHTML='Σ = ⅓ '+matrix([7,'−1','−'+n,'−1',7,n,'−'+n,n,v]);
+ }else{
+  el('sigma').innerHTML='Σ ≈ '+matrix([A,s.B,-s.g,s.B,A,s.g,-s.g,s.g,s.v].map(x=>number(x,3)));
+ }
+ el('exact').textContent=isNotes?'The covariance decomposition in the notes is −1/3 = 4/13 − 25/39.':isScript?'The covariance decomposition for the Python example is −1/3 = 17/30 − 9/10.':'The displayed covariance matrix is rounded. The plots use the full precision of the model.';
+ schedule();
+}
+let flatNeedsDrawing=true;
+function schedule(spaceOnly=false){
+ if(spaceOnly!==true)flatNeedsDrawing=true;
+ if(pending)return;
+ pending=requestAnimationFrame(()=>{
+  pending=0;
+  const s=getState();
+  renderSpace(s);
+  if(flatNeedsDrawing){renderFlat(s);flatNeedsDrawing=false;}
+ });
+}
+function loadModel(){
+ parameters={...models[el('model').value]};
+ el('within').value=parameters.r;el('share').value=100*parameters.h;
+ sync();
+}
+el('model').addEventListener('change',loadModel);
+for(const id of ['within','share'])el(id).addEventListener('input',()=>{
+ if(id==='within')parameters.r=Number(el(id).value);
+ else parameters.h=Number(el(id).value)/100;
+ el('model').value='custom';sync();
+});
+el('less').onclick=()=>{count=Math.max(1,count-1);sync();};
+el('more').onclick=()=>{count=Math.min(5,count+1);sync();};
+for(const id of ['weight','marginal','conditional','regression','draws'])el(id).addEventListener('input',sync);
+el('reset').onclick=()=>{el('weight').value=0;sync();};
+el('camera').onchange=()=>{[az,tilt]=views[el('camera').value];schedule(true);};
+function orbit(dx,dy){az+=dx;tilt=Math.max(-Math.PI/2,Math.min(Math.PI/2,tilt+dy));el('camera').value='free';schedule(true);}
+const canvas=el('space');let drag=null;
+canvas.onpointerdown=e=>{if(drag||e.button!==0)return;canvas.setPointerCapture(e.pointerId);drag={id:e.pointerId,x:e.clientX,y:e.clientY};};
+canvas.onpointermove=e=>{if(drag?.id!==e.pointerId)return;orbit((e.clientX-drag.x)*.009,(e.clientY-drag.y)*.009);drag.x=e.clientX;drag.y=e.clientY;};
+canvas.onlostpointercapture=()=>{drag=null;};
+canvas.onkeydown=e=>{const d={ArrowLeft:[-.09,0],ArrowRight:[.09,0],ArrowUp:[0,.09],ArrowDown:[0,-.09]}[e.key];if(d){e.preventDefault();orbit(...d);}};
+new ResizeObserver(schedule).observe(el('space'));new ResizeObserver(schedule).observe(el('flat'));sync();
+</script></body></html>

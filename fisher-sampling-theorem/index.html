@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fisher's Sampling Theorem Proof</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a lecture board. Claims strip on top, proof text left, picture right, controls under the picture.
+   Colour carries one encoding throughout: amber = mean direction, green = residual, violet = the sample we follow. */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --ink:#16202e; --muted:#5a6676; --rule:#d6dce5;
+  --mean:#b45309; --res:#0f7b55; --point:#5b3fd6; --cloud:#8793a5;
+  --mean-soft:#f6e6d3; --res-soft:#d9efe6; --point-soft:#e8e3fb;
+  --display:"Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f141b; --surface:#171e28; --ink:#e8edf3; --muted:#98a4b4; --rule:#2c3644;
+    --mean:#cc8230; --res:#2fae80; --point:#8f7cf5; --cloud:#66738a;
+    --mean-soft:#3a2a17; --res-soft:#15332a; --point-soft:#2a2550;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f141b; --surface:#171e28; --ink:#e8edf3; --muted:#98a4b4; --rule:#2c3644;
+  --mean:#cc8230; --res:#2fae80; --point:#8f7cf5; --cloud:#66738a;
+  --mean-soft:#3a2a17; --res-soft:#15332a; --point-soft:#2a2550;
+}
+*{box-sizing:border-box}
+html{font-size:17px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.5}
+.wrap{max-width:1500px;margin:0 auto;padding:18px clamp(16px,2.5vw,36px) 28px;display:flex;flex-direction:column;gap:14px}
+
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 24px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(1.9rem,3.2vw,2.7rem);line-height:1.05;margin:0;text-wrap:balance}
+.sub{color:var(--muted);font-size:.88rem;margin-top:2px}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+button{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:6px 13px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:2px solid var(--point);outline-offset:2px}
+button.primary{background:var(--point);border-color:var(--point);color:#fff;font-weight:500}
+button:disabled{opacity:.4;cursor:default}
+
+.claims{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0;padding:0;list-style:none}
+.claims li{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:7px 12px;display:flex;flex-direction:column;gap:2px;min-width:0;opacity:.62;transition:opacity .3s}
+.claims li.done{opacity:1;border-color:var(--res)}
+.claims .tag{font-size:.74rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.claims li.done .tag b{color:var(--res)}
+.claims .f{overflow-x:auto;overflow-y:hidden;min-height:2.3em;display:flex;align-items:center}
+
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;font-size:.86rem;color:var(--muted)}
+.tabs .num{font-family:var(--mono);font-size:.78rem;width:1.6rem;height:1.6rem;border-radius:50%;border:1px solid var(--rule);display:grid;place-items:center}
+.tabs button[aria-current="step"]{color:var(--ink);border-color:var(--point);background:var(--point-soft)}
+.tabs button[aria-current="step"] .num{background:var(--point);border-color:var(--point);color:#fff}
+
+main{display:grid;grid-template-columns:minmax(300px,4fr) minmax(0,8fr);gap:16px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:12px}
+.text{padding:18px 22px 20px}
+.steps{position:relative}
+.step{position:absolute;left:0;right:0;top:0;visibility:hidden;pointer-events:none}
+.step.on{position:relative;visibility:visible;pointer-events:auto}
+.step h2{font-family:var(--display);font-weight:400;font-size:1.75rem;line-height:1.12;margin:0 0 10px;text-wrap:balance}
+.step p{margin:0 0 10px;max-width:62ch}
+.step .eq{font-size:.92em;margin:4px 0 12px;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.step .so{border-left:3px solid var(--res);background:var(--res-soft);padding:8px 12px;border-radius:0 8px 8px 0;margin:12px 0 0;max-width:62ch}
+.step .so b{font-weight:600}
+.thm{border:1px solid var(--rule);border-radius:8px;padding:10px 14px;margin:0 0 12px;background:var(--bg)}
+.thm b{font-weight:600}
+.key{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.84rem;color:var(--muted);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule)}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:18px;height:4px;border-radius:2px;display:inline-block}
+.sw.dot{width:10px;height:10px;border-radius:50%}
+.mean{fill:var(--mean);stroke:var(--mean)} .res{fill:var(--res);stroke:var(--res)} .pt{fill:var(--point);stroke:var(--point)}
+
+.stage{padding:10px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pics{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.pics figure{margin:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+.pics figcaption{font-size:.84rem;padding:0 4px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px}
+.pics figcaption b{font-weight:600}
+.pics figcaption span{color:var(--muted);font-size:.78rem}
+.cv{position:relative;aspect-ratio:1/1;max-height:66vh;min-height:300px}
+.cv canvas{position:absolute;inset:0;width:100%;height:100%;display:block;border-radius:8px;touch-action:none;cursor:default}
+.hint{font-size:.8rem;color:var(--muted);padding:0 6px}
+.read{display:flex;flex-wrap:wrap;gap:6px 8px;padding:0 4px}
+.read div{font-family:var(--mono);font-size:.84rem;font-variant-numeric:tabular-nums;border:1px solid var(--rule);border-radius:6px;padding:3px 9px;white-space:nowrap;border-left-width:4px}
+.read .m{border-left-color:var(--mean)} .read .r{border-left-color:var(--res)} .read .p{border-left-color:var(--point)} .read .k{border-left-color:var(--muted)}
+.ctl{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;padding:10px 6px 4px;border-top:1px solid var(--rule)}
+.grp{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.grp .cap{font-size:.86rem;color:var(--muted)}
+.mini{padding:4px 10px;min-width:2.2rem;font-family:var(--mono)}
+.try{border-left:3px solid var(--point);background:var(--point-soft);padding:8px 12px;border-radius:0 8px 8px 0;margin:12px 0 0;max-width:62ch}
+.try b{font-weight:600;color:var(--point)}
+.so,.try{display:flow-root;padding-bottom:10px}
+.so+.try,.try+.so,.so+.so{margin-top:14px}
+.keys{font-size:.8rem;color:var(--muted);align-self:center;margin-left:6px}
+.ctl label{display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--muted)}
+.ctl output{font-family:var(--mono);color:var(--ink);min-width:2.6em;font-variant-numeric:tabular-nums}
+input[type=range]{accent-color:var(--point);width:120px}
+select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:5px 8px}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.seg button{border:0;border-radius:0;padding:5px 12px;font-size:.86rem}
+.seg button[aria-pressed="true"]{background:var(--point);color:#fff}
+[hidden]{display:none !important}
+
+.sim{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sim figure{margin:0;border:1px solid var(--rule);border-radius:8px;padding:8px 10px 6px;position:relative;min-width:0}
+.sim figcaption{font-size:.84rem;display:flex;flex-direction:column;gap:1px;margin-bottom:4px}
+.sim figcaption b{font-weight:600}
+.sim figcaption span{color:var(--muted);font-size:.78rem}
+.sim canvas{width:100%;height:clamp(150px,21vh,230px);display:block}
+.lg{display:inline-block;width:20px;border-top:2px solid var(--ink);vertical-align:middle;margin-right:4px}
+.lg.d{border-top:2px dashed var(--muted)}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:.78rem;padding:4px 8px;border-radius:6px;z-index:5;white-space:nowrap}
+
+@media (max-width:980px){
+  main{grid-template-columns:1fr}
+  .claims{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:520px){
+  html{font-size:16px}
+  .claims{grid-template-columns:1fr}
+  .sim{grid-template-columns:1fr}
+  .tabs .lbl{display:none}
+  .tabs button{padding:5px 6px}
+}
+</style>
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],packages:{'[+]':['html']}},svg:{fontCache:'global'}};
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg-full.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>Fisher's Sampling Theorem</h1>
+    <div class="sub">ST229 &middot; Section 7.4 &middot; the proof, as a rotation of the sample</div>
+  </div>
+  <div class="nav">
+    <button id="prev" type="button" aria-label="Previous step">&larr; Back</button>
+    <button id="next" type="button" class="primary" aria-label="Next step">Next &rarr;</button>
+    <button id="full" type="button">Full screen</button>
+  </div>
+</header>
+
+<ul class="claims" aria-label="The four claims of the theorem">
+  <li data-at="2"><div class="tag"><b>(a)</b><span class="st">step 2</span></div><div class="f">\(\bar X\sim N\!\left(\mu,\ \sigma^2/n\right)\)</div></li>
+  <li data-at="5"><div class="tag"><b>(b)</b><span class="st">step 5</span></div><div class="f">\(\dfrac{(n-1)S^2}{\sigma^2}\sim\chi^2_{n-1}\)</div></li>
+  <li data-at="5"><div class="tag"><b>(c)</b><span class="st">step 5</span></div><div class="f">\(\bar X\ \text{and}\ S^2\ \text{are independent}\)</div></li>
+  <li data-at="6"><div class="tag"><b>(d)</b><span class="st">step 6</span></div><div class="f">\(\dfrac{\bar X-\mu}{\sqrt{S^2/n}}\sim t_{n-1}\)</div></li>
+</ul>
+
+<nav class="tabs" id="tabs" aria-label="Steps of the proof"></nav>
+
+<main>
+  <section class="card text">
+    <div class="steps">
+
+      <article class="step" data-title="A sample is a point">
+        <h2>One sample is one point in \(\mathbb R^n\)</h2>
+        <div class="thm"><b>Setting.</b> \(X_1,\dots,X_n\) are independent \(N(\mu,\sigma^2)\), with
+          \[\bar X=\frac1n\sum_{i=1}^n X_i,\]\[S^2=\frac1{n-1}\sum_{i=1}^n (X_i-\bar X)^2 .\]
+        </div>
+        <p>Stack the sample into a single random vector \(\mathbf X=(X_1,\dots,X_n)^T\). Independence makes the covariance matrix diagonal, so</p>
+        <div class="eq">\[\mathbf X\sim \mathrm{MVN}\!\left(\mu\mathbf 1,\ \sigma^2 I_n\right),\qquad \mathbf 1=(1,\dots,1)^T .\]</div>
+        <p>Each grey dot in the picture is a whole sample of size \(n\). The cloud is round, and its centre \(\mu\mathbf 1\) sits on the diagonal. We follow the violet sample \(\mathbf X\) through the proof.</p>
+        <p>The whole proof is one idea: choose new axes in which \(\bar X\) is the first coordinate and \(S^2\) is built from all the others.</p>
+        <p class="try"><b>Try</b> Drag the violet point, or press New sample. Move \(\mu\) and \(\sigma\): \(\mu\) slides the cloud along the diagonal and \(\sigma\) sets its radius.</p>
+      </article>
+
+      <article class="step" data-title="Split it">
+        <h2>Split the sample into its mean and what is left</h2>
+        <div class="eq">\[\mathbf X=\class{mean}{\bar X\,\mathbf 1}+\class{res}{(\mathbf X-\bar X\,\mathbf 1)}\]</div>
+        <p>\(\class{mean}{\bar X\mathbf 1}\) is the projection of \(\mathbf X\) onto the diagonal \(\{c\mathbf 1\}\), a 1-dimensional space. Its length is \(\sqrt n\,|\bar X|\).</p>
+        <p>The residual \(\class{res}{\mathbf X-\bar X\mathbf 1}\) has entries that sum to zero, \(\sum_i (X_i-\bar X)=0\), so it lies in \(\{x:\sum_i x_i=0\}\), which has dimension \(n-1\): a line when \(n=2\), a plane when \(n=3\). Its squared length is</p>
+        <div class="eq">\[\class{res}{\lVert \mathbf X-\bar X\mathbf 1\rVert^2=\sum_{i=1}^n (X_i-\bar X)^2=(n-1)S^2 .}\]</div>
+        <p class="try"><b>Try</b> Use the buttons under the pictures to move \(\mathbf X\) along the diagonal: \(\bar X\) changes and \(S^2\) does not. Move it across: \(S^2\) changes and \(\bar X\) does not. The two statistics are read off from perpendicular directions.</p>
+        <p class="so"><b>(a)</b> \(\bar X\) is a linear combination of independent Gaussians, so it is Gaussian, with \(\mathbb E[\bar X]=\mu\) and \(\operatorname{Var}(\bar X)=\frac1{n^2}\sum_i\sigma^2=\sigma^2/n\).</p>
+      </article>
+
+      <article class="step" data-title="Rotate">
+        <h2>Rotate so the diagonal becomes the first axis</h2>
+        <p>Take an orthogonal matrix \(O\) whose first row is \(\tfrac1{\sqrt n}\mathbf 1^T\), and set \(\mathbf Y=O\mathbf X\).</p>
+        <div class="eq">\[O=\begin{pmatrix}\tfrac1{\sqrt n}\,\mathbf 1^T\\[4pt] \text{any orthonormal completion}\end{pmatrix}\]\[\text{e.g. } n=2:\quad O=\tfrac1{\sqrt2}\begin{pmatrix}1&1\\-1&1\end{pmatrix}\]</div>
+        <p>Multiplying by \(O\) turns the whole picture rigidly. It is the same sample, described in new axes: \(Y_1\) along the old diagonal, and \(Y_2,\dots,Y_n\) spanning the green line or plane. The first coordinate picks out the mean:</p>
+        <div class="eq">\[\class{mean}{Y_1=\frac1{\sqrt n}\sum_{j=1}^n X_j=\sqrt n\,\bar X .}\]</div>
+        <p>Every other row of \(O\) is orthogonal to \(\mathbf 1\), so \(\sum_j O_{ij}=0\) and \(\mathbb E[Y_i]=\mu\sum_j O_{ij}=0\) for \(i\ge 2\).</p>
+        <p class="try"><b>Try</b> Scrub the rotation slider back and forth. Lengths, angles and the shape of the cloud never change; only the axes we describe them in.</p>
+      </article>
+
+      <article class="step" data-title="Still round">
+        <h2>The cloud is still round, so the new coordinates are independent</h2>
+        <div class="eq">\[\Sigma_{\mathbf Y}=O\,\Sigma_{\mathbf X}\,O^T=\sigma^2\,OO^T=\sigma^2 I_n .\]</div>
+        <p>\(\mathbf Y\) is a linear map of a Gaussian vector, so it is Gaussian. Gaussian with zero covariances means independent. Therefore \(Y_1,\dots,Y_n\) are independent Gaussians with</p>
+        <div class="eq">\[\begin{gathered}\class{mean}{Y_1\sim N(\sqrt n\,\mu,\ \sigma^2)},\\ \class{res}{Y_2,\dots,Y_n\sim N(0,\sigma^2)},\end{gathered}\]</div>
+        <p>and all \(n\) of them are independent.</p>
+        <p>This is where normality does the work: a round Gaussian cloud looks the same from every direction, so turning the axes does not create dependence.</p>
+        <p class="try"><b>Try</b> Press Centre the data, then Rotate back and Rotate. With \(\mu=0\) the cloud sits at the origin and the rotation leaves it visibly unchanged. Nothing is lost by centring: subtracting \(\mu\) from every \(X_i\) leaves \(S^2\) alone and turns \(\bar X\) into \(\bar X-\mu\).</p>
+      </article>
+
+      <article class="step" data-title="Lengths">
+        <h2>Rotation keeps lengths, which gives (b) and (c)</h2>
+        <div class="eq">\[\sum_{i=1}^n Y_i^2=\mathbf Y^T\mathbf Y=\mathbf X^TO^TO\,\mathbf X=\sum_{i=1}^n X_i^2 .\]</div>
+        <p>Pythagoras in the triangle with corners \(\mathbf 0\), \(\bar X\mathbf 1\), \(\mathbf X\):</p>
+        <div class="eq">\[\begin{aligned}\class{res}{(n-1)S^2}&=\sum_{i=1}^n X_i^2-n\bar X^2\\ &=\sum_{i=1}^n Y_i^2-\class{mean}{Y_1^2}=\class{res}{\sum_{i=2}^n Y_i^2 .}\end{aligned}\]</div>
+        <p>The mean has used up one of the \(n\) coordinates, which is why \(n-1\) appears.</p>
+        <p class="so"><b>(c)</b> \(\bar X\) is a function of \(Y_1\) alone and \(S^2\) is a function of \(Y_2,\dots,Y_n\) alone, so they are independent.</p>
+        <p class="so"><b>(b)</b> \(\dfrac{(n-1)S^2}{\sigma^2}=\sum_{i=2}^n\Big(\dfrac{Y_i}{\sigma}\Big)^2\) is a sum of \(n-1\) squared independent \(N(0,1)\) variables, which is \(\chi^2_{n-1}\) by definition.</p>
+        <p class="try"><b>Try</b> Press New sample a few times. Under each picture the two green numbers always agree.</p>
+      </article>
+
+      <article class="step" data-title="t, and a check">
+        <h2>Assemble the \(t\) statistic, then check by simulation</h2>
+        <p>Divide top and bottom by \(\sqrt{\sigma^2/n}\):</p>
+        <div class="eq">\[\frac{\bar X-\mu}{\sqrt{S^2/n}}=\frac{\class{mean}{(\bar X-\mu)\big/\sqrt{\sigma^2/n}}}{\sqrt{\class{res}{\dfrac{(n-1)S^2}{\sigma^2}}\Big/(n-1)}}\]</div>
+        <p class="so"><b>(d)</b> The top is \(N(0,1)\) by (a), the bottom is \(\sqrt{\chi^2_{n-1}/(n-1)}\) by (b), and they are independent by (c). That is the definition of \(t_{n-1}\).</p>
+        <p style="margin-top:12px">Each run draws 5,000 samples of size \(n\) and compares them with the four claims.</p>
+        <p class="try"><b>Try</b> Set \(n=2\), then raise it: the \(t_{n-1}\) curve closes in on the dashed \(N(0,1)\). Then switch the data to the skewed distribution: \(\bar X\) and \(S^2\) become dependent and the \(t\) curve stops fitting, because that cloud is not round.</p>
+      </article>
+
+    </div>
+    <div class="key" aria-label="Colour key">
+      <span><i class="sw" style="background:var(--mean)"></i>mean direction: \(\bar X\), \(Y_1\)</span>
+      <span><i class="sw" style="background:var(--res)"></i>residual: \(S^2\), \(Y_2,\dots,Y_n\)</span>
+      <span><i class="sw dot" style="background:var(--point)"></i>the sample we follow</span>
+    </div>
+  </section>
+
+  <section class="card stage">
+    <div id="geoWrap" class="pics">
+      <figure id="fig2">
+        <figcaption><b>n = 2: the residual space is a line</b><span>drag the violet point</span></figcaption>
+        <div class="cv"><canvas id="geo2" tabindex="0" aria-label="Two-dimensional picture: a round cloud of samples of size 2, the diagonal, and the highlighted sample split into mean and residual"></canvas></div>
+        <div class="read" id="read2"></div>
+      </figure>
+      <figure id="fig3">
+        <figcaption><b>n = 3: the residual space is a plane</b><span>drag to turn the picture</span></figcaption>
+        <div class="cv"><canvas id="geo3" tabindex="0" aria-label="Three-dimensional picture: a round cloud of samples of size 3, the diagonal line, the plane of vectors whose entries sum to zero, and the highlighted sample split into mean and residual"></canvas></div>
+        <div class="read" id="read3"></div>
+      </figure>
+    </div>
+    <div class="sim" id="sim" hidden>
+      <figure><figcaption><b>(a) Sample mean \(\bar X\)</b><span><i class="lg"></i>\(N(\mu,\sigma^2/n)\) density</span></figcaption><canvas id="h1"></canvas></figure>
+      <figure><figcaption><b>(b) \((n-1)S^2/\sigma^2\)</b><span><i class="lg"></i><span id="capB"></span> density</span></figcaption><canvas id="h2"></canvas></figure>
+      <figure><figcaption><b>(c) \(S^2\) against \(\bar X\)</b><span id="capC"></span></figcaption><canvas id="h3"></canvas></figure>
+      <figure><figcaption><b>(d) \((\bar X-\mu)\big/\sqrt{S^2/n}\)</b><span><i class="lg"></i><span id="capD"></span> &nbsp; <i class="lg d"></i>N(0,1)</span></figcaption><canvas id="h4"></canvas></figure>
+    </div>
+    <div class="read" id="read" aria-live="off"></div>
+    <div class="ctl">
+      <div class="grp" id="gView">
+        <span id="gN" class="seg" role="group" aria-label="Which pictures to show">
+          <button type="button" data-v="both" aria-pressed="true">2D and 3D</button><button type="button" data-v="2" aria-pressed="false">2D only</button><button type="button" data-v="3" aria-pressed="false">3D only</button>
+        </span>
+      </div>
+      <div class="grp" id="gRot">
+        <label>rotation <input type="range" id="rot" min="0" max="1" step="0.01" value="0"><output id="roto">0%</output></label>
+        <button type="button" id="play">Rotate</button>
+      </div>
+      <div class="grp" id="gSim" hidden>
+        <label>sample size n <input type="range" id="sN" min="2" max="30" step="1" value="5"><output id="sNo">5</output></label>
+        <label>data <select id="dist"><option value="normal">Normal</option><option value="exp">Skewed (exponential), same mean and variance</option></select></label>
+        <button type="button" id="rerun">Run again</button>
+      </div>
+      <div class="grp">
+        <label>&mu; <input type="range" id="mu" min="0" max="2" step="0.05" value="1.4"><output id="muo">1.40</output></label>
+        <label>&sigma; <input type="range" id="sg" min="0.3" max="1" step="0.05" value="0.7"><output id="sgo">0.70</output></label>
+        <button type="button" id="centre">Centre the data (μ = 0)</button>
+      </div>
+      <div class="grp" id="gMove">
+        <button type="button" id="resample">New sample</button>
+        <span id="nudge" class="grp">
+          <span class="cap">move X along the diagonal</span>
+          <button type="button" class="mini" id="alongM" aria-label="Move the sample back along the diagonal">&#9664;</button><button type="button" class="mini" id="alongP" aria-label="Move the sample forward along the diagonal">&#9654;</button>
+          <span class="cap">across it</span>
+          <button type="button" class="mini" id="acrossM" aria-label="Shrink the residual">&minus;</button><button type="button" class="mini" id="acrossP" aria-label="Grow the residual">+</button>
+        </span>
+      </div>
+      <button type="button" id="reset">Reset</button>
+    </div>
+  </section>
+</main>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const SQ=Math.sqrt, PI=Math.PI;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- random numbers ---------- */
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let U=rng(229);
+function gauss(){let u=0;while(u<1e-12)u=U();return SQ(-2*Math.log(u))*Math.cos(2*PI*U())}
+
+/* ---------- state ---------- */
+const S={step:1,view:'both',mu:1.4,sigma:0.7,s:0,yaw:-0.78,pitch:0.78,simN:5,dist:'normal'};
+const NC=320, Z=[]; for(let i=0;i<NC;i++)Z.push([gauss(),gauss(),gauss()]);
+let hz=[1.1,-0.65,0.75];
+const STEP_S=[0,0,1,1,1,1];
+
+/* ---------- linear algebra ---------- */
+function rot(s,n){
+  const u0=1/SQ(n), k=n===2?[0,0,-1]:[0,1/SQ(2),-1/SQ(2)];
+  const th=s*Math.acos(u0), c=Math.cos(th), sn=Math.sin(th);
+  return v=>{
+    const kv=k[0]*v[0]+k[1]*v[1]+k[2]*v[2];
+    const cx=k[1]*v[2]-k[2]*v[1], cy=k[2]*v[0]-k[0]*v[2], cz=k[0]*v[1]-k[1]*v[0];
+    return [v[0]*c+cx*sn+k[0]*kv*(1-c), v[1]*c+cy*sn+k[1]*kv*(1-c), v[2]*c+cz*sn+k[2]*kv*(1-c)];
+  };
+}
+function sampleN(z,n){return [S.mu+S.sigma*z[0],S.mu+S.sigma*z[1],n===3?S.mu+S.sigma*z[2]:0]}
+function stats(n){
+  const x=sampleN(hz,n).slice(0,n);
+  const xb=x.reduce((a,b)=>a+b,0)/n, ss=x.reduce((a,b)=>a+(b-xb)*(b-xb),0), sq=x.reduce((a,b)=>a+b*b,0);
+  const y=rot(1,n)(sampleN(hz,n)).slice(0,n);
+  return {n,x,xb,ss,s2:ss/(n-1),sq,y};
+}
+
+/* ---------- canvas helpers ---------- */
+function fit(cv){const r=cv.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,2);
+  const w=Math.max(50,Math.round(r.width)),h=Math.max(50,Math.round(r.height));
+  if(cv.width!==w*d||cv.height!==h*d){cv.width=w*d;cv.height=h*d}
+  const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);return {c,w,h}}
+function css(){const g=getComputedStyle(document.documentElement),v=n=>g.getPropertyValue(n).trim();
+  return {bg:v('--bg'),surface:v('--surface'),ink:v('--ink'),muted:v('--muted'),rule:v('--rule'),mean:v('--mean'),res:v('--res'),point:v('--point'),cloud:v('--cloud')}}
+const FONT='"IBM Plex Sans", system-ui, sans-serif';
+
+/* ---------- geometry picture ---------- */
+const geo2=$('geo2'),geo3=$('geo3');
+const SREF=0.85;
+function makeProj(w,h,n){
+  let proj,view;
+  if(n===2){
+    const xmin=Math.min(-1,S.mu-2.5*SREF)-0.2,xmax=SQ(2)*S.mu+2.5*SREF+0.6,ymin=-2.5*SREF-0.3,ymax=Math.max(S.mu+2.5*SREF,1.4)+0.5;
+    const sc=Math.min(w/(xmax-xmin),h/(ymax-ymin)),cx=(xmin+xmax)/2,cy=(ymin+ymax)/2;
+    view={sc,xmin:cx-w/2/sc,xmax:cx+w/2/sc,ymin:cy-h/2/sc,ymax:cy+h/2/sc,bx:xmax,by:ymax,depth:()=>0};
+    proj=p=>[w/2+(p[0]-cx)*sc,h/2-(p[1]-cy)*sc];
+    proj.inv=(px,py)=>[cx+(px-w/2)/sc,cy-(py-h/2)/sc,0];
+  }else{
+    const q=S.mu/1.4,L=[1.3*q,0.7*q,0.7*q],Rr=2.5+0.72*S.mu,sc=Math.min(w,h)/(2*Rr), cy=Math.cos(S.yaw),sy=Math.sin(S.yaw),cp=Math.cos(S.pitch),sp=Math.sin(S.pitch);
+    const R=[-sy,cy,0],Uu=[-sp*cy,-sp*sy,cp],D=[cp*cy,cp*sy,sp];
+    view={sc,depth:p=>((p[0]-L[0])*D[0]+(p[1]-L[1])*D[1]+(p[2]-L[2])*D[2])/Rr};
+    proj=p=>{const a=p[0]-L[0],b=p[1]-L[1],c=p[2]-L[2];return [w/2+(a*R[0]+b*R[1]+c*R[2])*sc,h/2-(a*Uu[0]+b*Uu[1]+c*Uu[2])*sc]};
+  }
+  return {proj,view};
+}
+/* greedy label placement: try the preferred side first, then the others, and keep clear of dots and earlier labels */
+function placeLabels(c,w,h,K,L,obst){
+  const placed=obst.slice(),hit=(b,q)=>!(b.x1<q.x0||b.x0>q.x1||b.y1<q.y0||b.y0>q.y1);
+  L.sort((a,b)=>a.pri-b.pri);
+  for(const l of L){
+    c.font=(l.bold?'600 ':'500 ')+'14px '+FONT;const tw=c.measureText(l.txt).width+10,th=20;let best=null;
+    for(const da of [0,45,-45,90,-90,135,-135,180]){
+      const a=(l.pref+da)*PI/180,dx=Math.cos(a),dy=-Math.sin(a);
+      let cx=l.x+dx*(l.d+tw/2),cy=l.y+dy*(l.d+th/2);
+      cx=Math.max(tw/2+2,Math.min(w-tw/2-2,cx));cy=Math.max(th/2+2,Math.min(h-th/2-2,cy));
+      const b={x0:cx-tw/2,x1:cx+tw/2,y0:cy-th/2,y1:cy+th/2,cx,cy},k=placed.reduce((m,q)=>m+(hit(b,q)?1:0),0);
+      if(!best||k<best.k){best=b;best.k=k}
+      if(k===0)break;
+    }
+    c.save();c.globalAlpha=0.8*l.alpha;c.fillStyle=K.bg;c.beginPath();
+    if(c.roundRect)c.roundRect(best.x0,best.y0,tw,th,5);else c.rect(best.x0,best.y0,tw,th);c.fill();
+    c.globalAlpha=l.alpha;c.fillStyle=l.col||K.ink;c.textAlign='center';c.textBaseline='middle';c.fillText(l.txt,best.cx,best.cy+0.5);c.restore();
+    placed.push(best);
+  }
+}
+function drawGeo(geo,n){
+  const {c,w,h}=fit(geo),K=css(),st=S.step,R=rot(S.s,n);
+  const pv=makeProj(w,h,n),proj=pv.proj,view=pv.view;geo._proj=proj;
+  const sample=z=>sampleN(z,n),after=S.s>0.5&&st>=3;
+  c.clearRect(0,0,w,h);c.fillStyle=K.bg;c.fillRect(0,0,w,h);
+  c.lineCap='round';c.lineJoin='round';
+  const line=(a,b,col,lw,dash,al)=>{const p=proj(a),q=proj(b);c.save();c.globalAlpha=al==null?1:al;c.strokeStyle=col;c.lineWidth=lw;c.setLineDash(dash||[]);c.beginPath();c.moveTo(p[0],p[1]);c.lineTo(q[0],q[1]);c.stroke();c.restore()};
+  const LAB=[],OBS=[];
+  const dot=(a,col,r,ring)=>{const p=proj(a);c.beginPath();c.arc(p[0],p[1],r,0,2*PI);c.fillStyle=col;c.fill();if(ring){c.lineWidth=2;c.strokeStyle=K.bg;c.stroke()}
+    OBS.push({x0:p[0]-r-2,x1:p[0]+r+2,y0:p[1]-r-2,y1:p[1]+r+2})};
+  const ang=(a,b)=>{const p=a.length===3?proj(a):a,q=b.length===3?proj(b):b;return Math.atan2(-(q[1]-p[1]),q[0]-p[0])*180/PI};
+  const lab=(txt,a,pref,o)=>{const p=a.length===3?proj(a):a;LAB.push(Object.assign({txt,x:p[0],y:p[1],pref,pri:3,d:7,alpha:1},o||{}))};
+  const sub=['₁','₂','₃'];
+  const O0=[0,0,0], E=[[1,0,0],[0,1,0],[0,0,1]].slice(0,n);
+  const u=n===2?[1/SQ(2),1/SQ(2),0]:[1/SQ(3),1/SQ(3),1/SQ(3)];
+  const mul=(v,t)=>[v[0]*t,v[1]*t,v[2]*t], add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], subv=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
+  const AX=n===2?Math.max(2.6,S.mu+1.5):2.8, DL=Math.max(AX+0.8,SQ(n)*S.mu+1.3*S.sigma+0.6);
+  const ytip=i=>n===2?(i===0?view.bx-0.3:view.by-0.35):(i===0?DL:AX);
+
+  /* residual subspace: a line when n = 2, a plane when n = 3 */
+  if(st>=2){
+    if(n===2){const b=R([-1/SQ(2),1/SQ(2),0]);line(mul(b,-2.7),mul(b,2.7),K.res,2,null,.55);
+      lab(after?'line y₁ = 0':'line x₁ + x₂ = 0',mul(b,2.3),after?0:200,{pri:4});}
+    else{const b1=R([1/SQ(2),-1/SQ(2),0]),b2=R([1/SQ(6),1/SQ(6),-2/SQ(6)]),RD=2.05;c.beginPath();let low=null;
+      for(let i=0;i<=72;i++){const a=i/72*2*PI,p=proj(add(mul(b1,RD*Math.cos(a)),mul(b2,RD*Math.sin(a))));i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]);if(!low||p[1]>low[1])low=p}
+      c.save();c.globalAlpha=.15;c.fillStyle=K.res;c.fill();c.globalAlpha=.65;c.strokeStyle=K.res;c.lineWidth=1.5;c.stroke();c.restore();
+      for(let t=-1.5;t<=1.5;t+=0.5){const m=SQ(RD*RD-t*t);line(add(mul(b1,-m),mul(b2,t)),add(mul(b1,m),mul(b2,t)),K.res,1,null,.28);line(add(mul(b2,-m),mul(b1,t)),add(mul(b2,m),mul(b1,t)),K.res,1,null,.28)}
+      lab(after?'plane y₁ = 0':'plane x₁ + x₂ + x₃ = 0',low,270,{pri:4,d:4});}
+  }
+  /* axes: the X axes turn with the data; the Y axes are fixed and fade in with the rotation */
+  const yA=st>=3?Math.min(1,S.s*1.6):0, xA=1-0.6*yA;
+  E.forEach((e,i)=>{const d=R(e);line(mul(d,-0.8),mul(d,AX),K.muted,1.25,null,xA*.9);
+    for(let t=1;t<=AX-0.3;t++){const p=proj(mul(d,t));c.save();c.globalAlpha=xA*.8;c.fillStyle=K.muted;c.beginPath();c.arc(p[0],p[1],1.8,0,2*PI);c.fill();c.restore()}
+    lab('X'+sub[i],mul(d,AX),ang(O0,mul(d,AX)),{col:K.muted,alpha:xA,d:3})});
+  if(yA>0)E.forEach((e,i)=>{const t=ytip(i);line(mul(e,-0.8),mul(e,t),K.ink,1.6,null,yA);lab('Y'+sub[i],mul(e,t),ang(O0,mul(e,t)),{bold:true,alpha:yA,d:3,pri:2})});
+  /* diagonal */
+  const du=R(u);line(mul(du,-1.0),mul(du,DL),K.mean,st>=2?2:1.25,st>=2?null:[5,5],st>=2?.6:.75);
+  if(!after)lab(st>=2?'diagonal {c·1}':'diagonal x₁ = x₂'+(n===3?' = x₃':''),mul(du,DL-0.15),ang(O0,du)+90,{pri:4});
+
+  /* rings and cloud */
+  const C=R(n===2?[S.mu,S.mu,0]:[S.mu,S.mu,S.mu]),pc=proj(C);
+  c.save();c.strokeStyle=K.ink;c.globalAlpha=st===4?.55:.22;c.lineWidth=st===4?1.5:1;
+  [1,2].forEach(m=>{c.beginPath();c.arc(pc[0],pc[1],m*S.sigma*view.sc,0,2*PI);c.stroke()});c.restore();
+  if(st===1||st===4)lab('2σ',[pc[0]+2*S.sigma*view.sc*0.71,pc[1]-2*S.sigma*view.sc*0.71],45,{col:K.muted,pri:6,d:2});
+  c.save();c.fillStyle=K.cloud;
+  for(let i=0;i<NC;i++){const q=R(sample(Z[i])),p=proj(q),dz=view.depth(q);c.globalAlpha=Math.max(.2,Math.min(.75,.5+.5*dz));c.beginPath();c.arc(p[0],p[1],2.1*(1+.45*dz),0,2*PI);c.fill()}c.restore();
+  c.beginPath();c.arc(pc[0],pc[1],3,0,2*PI);c.fillStyle=K.ink;c.fill();
+  if(st===1||st===3)lab(after?'centre (√n·μ, 0'+(n===3?', 0':'')+')':'centre μ·1',[pc[0],pc[1]+2*S.sigma*view.sc],270,{col:K.muted,pri:5,d:3});
+
+  /* marginal bells along the new axes (n = 2, step 4) */
+  if(st===4&&n===2&&S.s>0.6){const al=(S.s-0.6)/0.4,by=view.ymin+0.15,bx=view.xmin+0.15,m=C[0],sg=S.sigma;
+    const bell=(pts,col)=>{c.save();c.beginPath();pts.forEach((q,i)=>{const p=proj(q);i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1])});c.globalAlpha=.22*al;c.fillStyle=col;c.fill();c.globalAlpha=al;c.strokeStyle=col;c.lineWidth=2;c.stroke();c.restore()};
+    const a=[],b=[];for(let i=0;i<=80;i++){const t=-3.4+6.8*i/80,g=0.7*Math.exp(-t*t/2);a.push([m+sg*t,by+g,0]);b.push([bx+g,sg*t,0])}
+    bell(a,K.mean);bell(b,K.res);
+    lab('Y₁ ~ N(√2·μ, σ²)',[m,by+0.7,0],90,{alpha:al,pri:1,d:3});lab('Y₂ ~ N(0, σ²)',[bx+0.7,0,0],60,{alpha:al,pri:1,d:6});}
+
+  /* the sample we follow */
+  const T=stats(n), X=R(sample(hz)), P=mul(du,SQ(n)*T.xb), Q=subv(X,P);
+  if(st===1){
+    if(n===2){line(X,[X[0],0,0],K.point,1,[4,4],.7);line(X,[0,X[1],0],K.point,1,[4,4],.7)}
+    else{const F=[X[0],X[1],0];line(X,F,K.point,1,[4,4],.7);line(F,[X[0],0,0],K.point,1,[4,4],.55);line(F,[0,X[1],0],K.point,1,[4,4],.55)}
+  }
+  if(st>=2){
+    if(st===5){const o=proj(O0),p=proj(P),x=proj(X);c.save();c.globalAlpha=.13;c.fillStyle=K.point;c.beginPath();c.moveTo(o[0],o[1]);c.lineTo(p[0],p[1]);c.lineTo(x[0],x[1]);c.closePath();c.fill();c.restore()}
+    line(Q,X,K.mean,1.25,[4,5],.8);line(O0,Q,K.res,3.5);
+    line(O0,P,K.mean,3.5);line(P,X,K.res,st===5?3.5:1.5,st===5?null:[4,5],st===5?1:.85);
+    if(st===5){line(O0,X,K.ink,2);
+      const p=proj(P),o=proj(O0),x=proj(X),nv=(a,b)=>{const d=Math.hypot(b[0]-a[0],b[1]-a[1])||1;return[(b[0]-a[0])/d*10,(b[1]-a[1])/d*10]},a=nv(p,o),b=nv(p,x);
+      c.beginPath();c.moveTo(p[0]+a[0],p[1]+a[1]);c.lineTo(p[0]+a[0]+b[0],p[1]+a[1]+b[1]);c.lineTo(p[0]+b[0],p[1]+b[1]);c.strokeStyle=K.ink;c.lineWidth=1.25;c.stroke();
+      const mh=mul(X,.5),ml=add(P,mul(Q,.5));
+      lab('‖X‖',mh,ang(P,mh),{pri:2,d:5});lab('√((n−1)S²)',ml,ang(O0,P),{pri:2,d:6});}
+    dot(P,K.mean,5.5,true);dot(Q,K.res,5.5,true);
+    lab(after?'Y₁ = √n·X̄':'X̄·1',P,ang(X,P),{pri:1,d:9});
+    if(st!==5)lab(after?(n===2?'Y₂':'(Y₂, Y₃)'):'X − X̄·1',Q,ang(X,Q),{pri:1,d:9});
+  }
+  dot(X,K.point,7.5,true);lab('X',X,ang(st>=2?P:C,X),{bold:true,pri:0,d:9});
+  placeLabels(c,w,h,K,LAB,OBS);
+}
+
+/* ---------- readouts ---------- */
+const f=(v,d)=>(v<0?'\u2212':'')+Math.abs(v).toFixed(d==null?2:d);
+function readHTML(n){
+  const st=S.step,T=stats(n),v=a=>'('+a.map(x=>f(x)).join(', ')+')';let h='';
+  if(st===1)h='<div class="p">X = '+v(T.x)+'</div>';
+  if(st===2)h='<div class="p">X = '+v(T.x)+'</div><div class="m">X\u0304 = '+f(T.xb)+'</div><div class="m">\u221an\u00b7|X\u0304| = '+f(SQ(n)*Math.abs(T.xb))+'</div><div class="r">S\u00b2 = '+f(T.s2)+'</div><div class="r">(n\u22121)S\u00b2 = '+f(T.ss)+'</div>';
+  if(st===3)h='<div class="p">X = '+v(T.x)+'</div><div class="k">Y = OX = '+v(T.y)+'</div><div class="m">\u221an\u00b7X\u0304 = '+f(SQ(n)*T.xb)+' = Y\u2081</div>';
+  if(st===4){let sx=0,sy=0,sxx=0,syy=0,sxy=0;const R=rot(1,n);for(const z of Z){const y=R(sampleN(z,n));sx+=y[0];sy+=y[1];sxx+=y[0]*y[0];syy+=y[1]*y[1];sxy+=y[0]*y[1]}
+    const m=NC,r=(sxy/m-sx*sy/m/m)/SQ((sxx/m-sx*sx/m/m)*(syy/m-sy*sy/m/m));
+    h='<div class="m">E[Y\u2081] = \u221an\u00b7\u03bc = '+f(SQ(n)*S.mu)+'</div><div class="r">'+(n===2?'E[Y\u2082] = 0':'E[Y\u2082] = E[Y\u2083] = 0')+'</div><div class="k">corr(Y\u2081, Y\u2082) in this cloud = '+f(r)+'</div>';}
+  if(st===5){const y1=T.y[0]*T.y[0];h='<div class="p">\u2016X\u2016\u00b2 = \u2016Y\u2016\u00b2 = '+f(T.sq)+'</div><div class="m">Y\u2081\u00b2 = n\u00b7X\u0304\u00b2 = '+f(y1)+'</div><div class="r">\u2016X\u2016\u00b2 \u2212 Y\u2081\u00b2 = '+f(T.sq-y1)+'</div><div class="r">(n\u22121)S\u00b2 = '+f(T.ss)+'</div>';}
+  return h;
+}
+function readout(){
+  if(S.step===6){const r=SIM&&SIM.r;$('read').innerHTML='<div class="k">5,000 samples of size n = '+S.simN+'</div><div class="k">corr(X\u0304, S\u00b2) = '+(r==null?'':f(r))+(S.dist==='normal'?' (theory: 0)':' (not 0)')+'</div>';return}
+  $('read').innerHTML='';
+  if(S.view!=='3')$('read2').innerHTML=readHTML(2);
+  if(S.view!=='2')$('read3').innerHTML=readHTML(3);
+}
+
+/* ---------- simulation ---------- */
+function lgamma(x){const g=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  let y=x,t=x+5.5;t-=(x+0.5)*Math.log(t);let s=1.000000000190015;for(let j=0;j<6;j++)s+=g[j]/++y;return -t+Math.log(2.5066282746310005*s/x)}
+const npdf=(x,m,s)=>Math.exp(-(x-m)*(x-m)/(2*s*s))/(s*SQ(2*PI));
+const chipdf=(x,k)=>x<=0?0:Math.exp((k/2-1)*Math.log(x)-x/2-(k/2)*Math.LN2-lgamma(k/2));
+const tpdf=(x,k)=>Math.exp(lgamma((k+1)/2)-lgamma(k/2)-0.5*Math.log(k*PI)-(k+1)/2*Math.log(1+x*x/k));
+let SIM=null; const M=5000;
+function simulate(){
+  const n=S.simN,xb=new Float64Array(M),s2=new Float64Array(M),tt=new Float64Array(M),x=new Float64Array(n);
+  for(let r=0;r<M;r++){let sum=0;for(let i=0;i<n;i++){x[i]=S.dist==='normal'?S.mu+S.sigma*gauss():S.mu-S.sigma-S.sigma*Math.log(1-U());sum+=x[i]}
+    const m=sum/n;let ss=0;for(let i=0;i<n;i++)ss+=(x[i]-m)*(x[i]-m);xb[r]=m;s2[r]=ss/(n-1);tt[r]=(m-S.mu)/SQ(s2[r]/n)}
+  let a=0,b=0,aa=0,bb=0,ab=0;for(let r=0;r<M;r++){a+=xb[r];b+=s2[r];aa+=xb[r]*xb[r];bb+=s2[r]*s2[r];ab+=xb[r]*s2[r]}
+  const r=(ab/M-a*b/M/M)/SQ((aa/M-a*a/M/M)*(bb/M-b*b/M/M));
+  SIM={n,xb,s2,tt,r};
+}
+function frame(cv,lo,hi,ticks){
+  const {c,w,h}=fit(cv),K=css(),pl=8,pr=8,pt=6,pb=22,X=v=>pl+(v-lo)/(hi-lo)*(w-pl-pr);
+  c.clearRect(0,0,w,h);c.font='12px '+FONT;c.textBaseline='top';c.textAlign='center';
+  c.strokeStyle=K.rule;c.lineWidth=1;c.beginPath();c.moveTo(pl,h-pb+.5);c.lineTo(w-pr,h-pb+.5);c.stroke();
+  ticks.forEach(t=>{const x=X(t.v);c.beginPath();c.moveTo(x,h-pb);c.lineTo(x,h-pb+4);c.stroke();c.fillStyle=K.muted;c.fillText(t.t,Math.min(w-14,Math.max(14,x)),h-pb+6)});
+  return {c,w,h,K,X,y0:h-pb,top:pt};
+}
+function hist(cv,data,lo,hi,nb,pdfs,col,ticks){
+  const F=frame(cv,lo,hi,ticks),{c,K,X,y0,top}=F,bw=(hi-lo)/nb,cnt=new Array(nb).fill(0);
+  for(const v of data){const i=Math.floor((v-lo)/bw);if(i>=0&&i<nb)cnt[i]++}
+  const dens=cnt.map(k=>k/data.length/bw);let ym=Math.max(...dens);
+  const sorted=dens.slice().sort((a,b)=>b-a);if(sorted[0]>2.2*sorted[1])ym=sorted[1]*1.6;
+  pdfs.forEach(p=>{if(!p.clipOnly)for(let i=1;i<200;i++){const v=p.f(lo+(hi-lo)*i/200);if(isFinite(v)&&v<ym*3)ym=Math.max(ym,Math.min(v,ym*1.25))}});
+  ym*=1.08;const Y=v=>y0-Math.min(v,ym*1.02)/ym*(y0-top);
+  c.fillStyle=K[col];c.globalAlpha=.6;
+  dens.forEach((d,i)=>{const x0=X(lo+i*bw)+1,x1=X(lo+(i+1)*bw)-1,y=Y(d);if(d>0){c.beginPath();c.roundRect?c.roundRect(x0,y,Math.max(1,x1-x0),y0-y,[3,3,0,0]):c.rect(x0,y,x1-x0,y0-y);c.fill()}});
+  c.globalAlpha=1;
+  pdfs.forEach(p=>{c.beginPath();let on=false;for(let i=0;i<=300;i++){const xv=lo+(hi-lo)*i/300,v=p.f(xv);if(!isFinite(v)){on=false;continue}const x=X(xv),y=Y(v);on?c.lineTo(x,y):c.moveTo(x,y);on=true}
+    c.strokeStyle=p.dash?K.muted:K.ink;c.lineWidth=2;c.setLineDash(p.dash?[5,4]:[]);c.stroke();c.setLineDash([])});
+  cv._bins={lo,bw,nb,cnt,total:data.length};
+}
+function scatter(cv,xs,ys,xlo,xhi,yhi,ticks){
+  const F=frame(cv,xlo,xhi,ticks),{c,K,X,y0,top}=F,Y=v=>y0-v/yhi*(y0-top);
+  c.fillStyle=K.point;c.globalAlpha=.3;
+  for(let i=0;i<1800;i++){if(ys[i]>yhi||xs[i]<xlo||xs[i]>xhi)continue;c.beginPath();c.arc(X(xs[i]),Y(ys[i]),1.7,0,2*PI);c.fill()}
+  c.globalAlpha=1;c.fillStyle=K.muted;c.textAlign='left';c.fillText('S\u00b2 \u2191',12,top);c.textAlign='right';c.fillText('X\u0304 \u2192',F.w-10,y0-16);
+}
+function drawSim(){
+  if(!SIM)simulate();const n=SIM.n,k=n-1,mu=S.mu,sg=S.sigma,se=sg/SQ(n);
+  const sub=String(k).split('').map(d=>'\u2080\u2081\u2082\u2083\u2084\u2085\u2086\u2087\u2088\u2089'[d]).join('');
+  $('capB').textContent='\u03c7\u00b2'+sub;$('capD').textContent='t'+sub;
+  $('capC').textContent=S.dist==='normal'?'no trend: knowing X\u0304 says nothing about S\u00b2':'a clear trend: X\u0304 and S\u00b2 are dependent';
+  const xl=mu-4.2*se,xh=mu+4.2*se,xt=[{v:mu-3*se,t:f(mu-3*se)},{v:mu,t:'\u03bc = '+f(mu)},{v:mu+3*se,t:f(mu+3*se)}];
+  hist($('h1'),SIM.xb,xl,xh,36,[{f:x=>npdf(x,mu,se)}],'mean',xt);
+  const ch=Math.max(8,k+4.5*SQ(2*k)),sc=new Float64Array(M);for(let i=0;i<M;i++)sc[i]=k*SIM.s2[i]/(sg*sg);
+  hist($('h2'),sc,0,ch,36,[{f:x=>chipdf(x,k)}],'res',[{v:0,t:'0'},{v:k,t:'n\u22121 = '+k},{v:Math.floor(ch),t:String(Math.floor(ch))}]);
+  scatter($('h3'),SIM.xb,SIM.s2,xl,xh,sg*sg*ch/k,xt);
+  hist($('h4'),SIM.tt,-6,6,48,[{f:x=>npdf(x,0,1),dash:true},{f:x=>tpdf(x,k)}],'point',[-4,-2,0,2,4].map(v=>({v,t:f(v,0)})));
+}
+
+/* ---------- steps ---------- */
+const steps=[...document.querySelectorAll('.step')],tabs=$('tabs');
+steps.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML='<span class="num">'+(i+1)+'</span><span class="lbl">'+s.dataset.title+'</span>';b.addEventListener('click',()=>go(i+1));tabs.appendChild(b)});
+{const k=document.createElement('span');k.className='keys';k.textContent='\u2190 \u2192 keys also move between steps';tabs.appendChild(k)}
+let raf=0;
+function animateTo(target){
+  cancelAnimationFrame(raf);
+  if(reduce||Math.abs(S.s-target)<0.005){S.s=target;syncRot();draw();return}
+  const from=S.s,t0=performance.now(),dur=1500*Math.abs(target-from)+200;
+  const tick=t=>{const q=Math.min(1,(t-t0)/dur),e=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;S.s=from+(target-from)*e;syncRot();draw();if(q<1)raf=requestAnimationFrame(tick)};
+  raf=requestAnimationFrame(tick);
+}
+function syncRot(){$('rot').value=S.s;$('roto').textContent=Math.round(S.s*100)+'%';$('play').textContent=S.s>0.5?'Rotate back':'Rotate'}
+function go(k){
+  k=Math.max(1,Math.min(6,k));S.step=k;
+  steps.forEach((s,i)=>s.classList.toggle('on',i===k-1));
+  [...tabs.querySelectorAll('button')].forEach((b,i)=>{i===k-1?b.setAttribute('aria-current','step'):b.removeAttribute('aria-current')});
+  document.querySelectorAll('.claims li').forEach(li=>{const d=k>=+li.dataset.at;li.classList.toggle('done',d);li.querySelector('.st').textContent=d?'\u2713 proved':'step '+li.dataset.at});
+  $('prev').disabled=k===1;$('next').disabled=k===6;
+  const sim=k===6;$('sim').hidden=!sim;$('geoWrap').hidden=sim;
+  $('gView').hidden=$('gMove').hidden=sim;$('gSim').hidden=!sim;$('gRot').hidden=sim||k<3;$('nudge').hidden=k<2;
+  if(sim){simulate();draw()}else animateTo(STEP_S[k-1]);
+}
+function draw(){if(S.step===6)drawSim();else{if(S.view!=='3')drawGeo(geo2,2);if(S.view!=='2')drawGeo(geo3,3)}readout()}
+
+/* ---------- controls ---------- */
+$('prev').onclick=()=>go(S.step-1);$('next').onclick=()=>go(S.step+1);
+document.addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){go(S.step+1);e.preventDefault()}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){go(S.step-1);e.preventDefault()}});
+$('full').onclick=()=>{try{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();if(p&&p.catch)p.catch(()=>{})}catch(_){}};
+$('gN').querySelectorAll('button').forEach(b=>b.onclick=()=>{S.view=b.dataset.v;$('gN').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));$('fig2').hidden=S.view==='3';$('fig3').hidden=S.view==='2';draw()});
+const setMu=v=>{S.mu=v;$('mu').value=v;$('muo').textContent=v.toFixed(2);$('centre').textContent=v<0.01?'Restore \u03bc':'Centre the data (\u03bc = 0)'};
+$('mu').oninput=e=>{cancelAnimationFrame(muRaf);setMu(+e.target.value);if(S.step===6)simulate();draw()};
+let muRaf=0,muPrev=1.4;
+$('centre').onclick=()=>{const from=S.mu,to=from<0.01?muPrev:0;if(to===0)muPrev=from;cancelAnimationFrame(muRaf);
+  if(reduce){setMu(to);draw();return}
+  const t0=performance.now(),tick=t=>{const q=Math.min(1,(t-t0)/900),e=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;setMu(from+(to-from)*e);draw();if(q<1)muRaf=requestAnimationFrame(tick);else setMu(to)};
+  muRaf=requestAnimationFrame(tick)};
+$('sg').oninput=e=>{S.sigma=+e.target.value;$('sgo').textContent=S.sigma.toFixed(2);if(S.step===6)simulate();draw()};
+$('rot').oninput=e=>{cancelAnimationFrame(raf);S.s=+e.target.value;syncRot();draw()};
+$('play').onclick=()=>animateTo(S.s>0.5?0:1);
+$('resample').onclick=()=>{hz=[gauss(),gauss(),gauss()];draw()};
+const along=d=>{if(Math.abs((hz[0]+hz[1])/2+d)>2.6)return;hz=hz.map(v=>v+d);draw()};
+const across=k=>{const m=(hz[0]+hz[1])/2;let d=(hz[0]-hz[1])/2;if(Math.abs(d)<0.08)d=0.08;d=Math.max(-2.6,Math.min(2.6,d*k));hz[0]=m+d;hz[1]=m-d;draw()};
+$('alongM').onclick=()=>along(-0.3);$('alongP').onclick=()=>along(0.3);$('acrossM').onclick=()=>across(0.75);$('acrossP').onclick=()=>across(1/0.75);
+$('reset').onclick=()=>{cancelAnimationFrame(muRaf);hz=[1.1,-0.65,0.75];S.yaw=-0.78;S.pitch=0.78;S.sigma=0.7;$('sg').value=0.7;$('sgo').textContent='0.70';setMu(1.4);muPrev=1.4;
+  S.simN=5;$('sN').value=5;$('sNo').textContent='5';S.dist='normal';$('dist').value='normal';if(S.step===6)simulate();draw()};
+$('sN').oninput=e=>{S.simN=+e.target.value;$('sNo').textContent=S.simN;simulate();draw()};
+$('dist').onchange=e=>{S.dist=e.target.value;simulate();draw()};
+$('rerun').onclick=()=>{simulate();draw()};
+
+/* drag: move the sample (n = 2) or turn the camera (n = 3) */
+let drag=null;
+const pos=e=>{const r=geo2.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]};
+const nearPoint=e=>{const pr=geo2._proj;if(!pr)return false;const [x,y]=pos(e),p=pr(rot(S.s,2)(sampleN(hz,2)));return Math.hypot(x-p[0],y-p[1])<22};
+geo2.addEventListener('pointerdown',e=>{if(nearPoint(e)){drag={pt:true};geo2.setPointerCapture(e.pointerId);e.preventDefault()}});
+geo2.addEventListener('pointermove',e=>{
+  if(!drag){geo2.style.cursor=nearPoint(e)?'grab':'default';return}
+  const [x,y]=pos(e),wv=geo2._proj.inv(x,y),v=rot(-S.s,2)(wv);hz[0]=Math.max(-3,Math.min(3,(v[0]-S.mu)/S.sigma));hz[1]=Math.max(-3,Math.min(3,(v[1]-S.mu)/S.sigma));draw()});
+geo3.style.cursor='grab';
+geo3.addEventListener('pointerdown',e=>{drag={cam:true,x:e.clientX,y:e.clientY};geo3.setPointerCapture(e.pointerId);e.preventDefault()});
+geo3.addEventListener('pointermove',e=>{if(!drag||!drag.cam)return;
+  S.yaw-=(e.clientX-drag.x)*0.008;S.pitch=Math.max(-1.35,Math.min(1.35,S.pitch+(e.clientY-drag.y)*0.008));drag.x=e.clientX;drag.y=e.clientY;draw()});
+const end=()=>{drag=null};[geo2,geo3].forEach(g=>{g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end)});
+
+/* histogram tooltips */
+const tip=$('tip');
+['h1','h2','h4'].forEach(id=>{const cv=$(id);
+  cv.addEventListener('pointermove',e=>{const b=cv._bins;if(!b)return;const r=cv.getBoundingClientRect(),v=b.lo+(e.clientX-r.left-8)/(r.width-16)*b.bw*b.nb,i=Math.floor((v-b.lo)/b.bw);
+    if(i<0||i>=b.nb){tip.hidden=true;return}
+    tip.textContent=f(b.lo+i*b.bw)+' to '+f(b.lo+(i+1)*b.bw)+': '+b.cnt[i].toLocaleString()+' of '+b.total.toLocaleString()+' samples';
+    tip.hidden=false;tip.style.left=Math.min(window.innerWidth-260,e.clientX+12)+'px';tip.style.top=(e.clientY-34)+'px'});
+  cv.addEventListener('pointerleave',()=>{tip.hidden=true})});
+
+/* redraw on resize, theme change and font load */
+new ResizeObserver(()=>draw()).observe(document.querySelector('.stage'));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
+new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
+
+go(1);
+})();
+</script>
+</body>
+</html>
