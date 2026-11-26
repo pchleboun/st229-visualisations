@@ -33,7 +33,10 @@ button:hover{border-color:var(--muted)}
 button:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid var(--as);outline-offset:2px}
 button.primary{background:var(--as);border-color:var(--as);color:#fff;font-weight:500}
 
-.modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0;padding:0;list-style:none}
+.modes{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);gap:8px;margin:0;padding:0;list-style:none;align-items:stretch}
+.modes li.arrow{border:0;background:none;padding:0;display:grid;place-items:center;font-size:1.3rem;color:var(--muted);min-width:1.4rem}
+.modes .words{font-size:.84rem;color:var(--muted);line-height:1.35}
+.modes .words b{color:var(--ink);font-weight:600}
 .modes li{background:var(--surface);border:1px solid var(--rule);border-left-width:5px;border-radius:10px;padding:8px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
 .modes .m-as{border-left-color:var(--as)} .modes .m-p{border-left-color:var(--prob)} .modes .m-d{border-left-color:var(--dist)}
 .modes .tag{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-weight:600;font-size:.92rem}
@@ -47,8 +50,22 @@ main{display:grid;grid-template-columns:minmax(300px,4fr) minmax(0,8fr);gap:16px
 .card{background:var(--surface);border:1px solid var(--rule);border-radius:12px}
 .text{padding:16px 20px 18px;display:flex;flex-direction:column;gap:12px}
 .text h2{font-family:var(--display);font-weight:400;font-size:1.45rem;line-height:1.15;margin:0}
-.pick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-.pick .grp{grid-column:1/-1;font-size:.76rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.pick{display:flex;flex-direction:column;gap:6px}
+.pick details{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.pick details>div{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.pick summary{font-size:.76rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.pick button{display:flex;flex-direction:column;gap:0;line-height:1.3}
+.pick button .role{font-weight:600;color:var(--ink);font-size:.9rem}
+.pick button .nm{font-size:.82rem}
+.point{border:1px solid var(--rule);border-radius:8px;padding:9px 12px 10px;background:var(--bg);margin:0 0 10px !important}
+.point b{font-weight:600}
+.views figure{position:relative}
+.look{position:absolute;top:7px;right:8px;font-size:.66rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--bg);background:var(--ink);border-radius:4px;padding:1px 6px;display:none}
+figure.on figcaption b{padding-right:5.6rem}
+.views figcaption .look{color:var(--bg);font-size:.66rem}
+figure.on .look{display:inline-block}
+figure.on{box-shadow:0 0 0 2px var(--ink)}
+.pick .grp{font-size:.76rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:6px}
 .pick .grp:first-child{margin-top:0}
 .pick button{text-align:left;padding:6px 10px;font-size:.88rem;color:var(--muted)}
 .pick button[aria-pressed="true"]{color:var(--ink);border-color:var(--as);background:var(--as-soft);font-weight:500}
@@ -59,8 +76,7 @@ main{display:grid;grid-template-columns:minmax(300px,4fr) minmax(0,8fr);gap:16px
 .ex .eq{margin:2px 0 8px;overflow-x:auto;overflow-y:hidden;font-size:.95em}
 .try{border-left:3px solid var(--as);background:var(--as-soft);padding:8px 12px 10px;border-radius:0 8px 8px 0;margin:6px 0 0;max-width:60ch}
 .try b{font-weight:600;color:var(--as)}
-.why{display:none;flex-direction:column;gap:8px;margin-top:10px}
-.revealed .why{display:flex}
+.why{display:flex;flex-direction:column;gap:8px;margin-top:12px}
 .why p{margin:0;padding:8px 12px 9px;border-radius:0 8px 8px 0;border-left:3px solid var(--rule);background:var(--bg);max-width:60ch}
 .why .w-as{border-left-color:var(--as)} .why .w-p{border-left-color:var(--prob)} .why .w-d{border-left-color:var(--dist)}
 .why b{font-weight:600}
@@ -71,19 +87,26 @@ main{display:grid;grid-template-columns:minmax(300px,4fr) minmax(0,8fr);gap:16px
 .views{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .views figure{margin:0;border:1px solid var(--rule);border-radius:8px;padding:8px 10px 6px;min-width:0;display:flex;flex-direction:column;gap:4px;border-top-width:4px}
 .views .f-n{border-top-color:var(--ink)} .views .f-as{border-top-color:var(--as)} .views .f-p{border-top-color:var(--prob)} .views .f-d{border-top-color:var(--dist)}
-.views figcaption{font-size:.86rem;display:flex;flex-direction:column;gap:1px;min-height:3.9em}
+.views figcaption{font-size:.86rem;display:flex;flex-direction:column;gap:1px;min-height:2.9em}
 .views figcaption b{font-weight:600}
 .why .w-n{border-left-color:var(--muted)}
 .views figcaption span{color:var(--muted);font-size:.8rem}
 .views figcaption .num{font-family:var(--mono);font-size:.78rem;font-variant-numeric:tabular-nums;color:var(--ink)}
-.views canvas{width:100%;height:clamp(170px,25vh,260px);display:block;touch-action:none;margin-top:auto}
+.views canvas{width:100%;height:clamp(150px,21vh,230px);display:block;touch-action:none;margin-top:auto}
+.views .f-map{grid-column:1/-1;border-top-color:var(--prob)}
+.views .f-map canvas{height:clamp(130px,17vh,190px)}
 .ctl{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;padding:10px 6px 4px;border-top:1px solid var(--rule)}
 .ctl label{display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--muted)}
 .ctl output{font-family:var(--mono);color:var(--ink);min-width:2.8em;font-variant-numeric:tabular-nums}
 input[type=range]{accent-color:var(--as);width:130px}
+.mini{padding:5px 10px;font-family:var(--mono);min-width:2.3rem}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.seg button{border:0;border-radius:0;padding:5px 11px;font-size:.86rem}
+.seg button[aria-pressed="true"]{background:var(--as);color:#fff}
+@media (min-width:981px) and (min-height:880px){.stage{position:sticky;top:10px}}
 #nS{width:220px}
 @media (max-width:980px){main{grid-template-columns:1fr}}
-@media (max-width:640px){html{font-size:16px}.modes{grid-template-columns:1fr}.views{grid-template-columns:1fr}.pick{grid-template-columns:1fr}}
+@media (max-width:760px){html{font-size:16px}.modes{grid-template-columns:1fr}.modes li.arrow{transform:rotate(90deg)}.views{grid-template-columns:1fr}}
 </style>
 <script>
 window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};
@@ -101,23 +124,32 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg
   <button id="full" type="button">Full screen</button>
 </header>
 
-<ul class="modes" aria-label="Three modes of convergence">
-  <li class="m-as"><div class="tag"><span><span class="dn">Def 8.2</span>Almost surely</span> <span class="v" id="vAs">strongest</span></div><div class="f">\(\mathbb P\big(\{\omega: X_n(\omega)\to X(\omega)\}\big)=1\)</div></li>
-  <li class="m-p"><div class="tag"><span><span class="dn">Def 8.1</span>In probability</span> <span class="v" id="vP"></span></div><div class="f">\(\forall\varepsilon>0:\ \ \mathbb P\big(|X_n-X|>\varepsilon\big)\to 0\)</div></li>
-  <li class="m-d"><div class="tag"><span><span class="dn">Def 8.3</span>In distribution</span> <span class="v" id="vD">weakest</span></div><div class="f">\(F_{X_n}(x)\to F_X(x)\ \text{ at all continuity points } x \text{ of } F_X\)</div></li>
+<ul class="modes" aria-label="Three modes of convergence, from strongest to weakest">
+  <li class="m-as"><div class="tag"><span><span class="dn">Def 8.2</span>Almost surely</span> <span class="v" id="vAs"></span></div>
+    <div class="f">\(\mathbb P\big(\lim_{n\to\infty}X_n=X\big)=1\)</div>
+    <div class="words"><b>Limit inside \(\mathbb P\).</b> One outcome at a time: almost every row of the map is eventually clear.</div></li>
+  <li class="arrow" aria-label="implies">\(\Rightarrow\)</li>
+  <li class="m-p"><div class="tag"><span><span class="dn">Def 8.1</span>In probability</span> <span class="v" id="vP"></span></div>
+    <div class="f">\(\lim_{n\to\infty}\mathbb P\big(|X_n-X|>\varepsilon\big)=0\ \ \forall\varepsilon>0\)</div>
+    <div class="words"><b>Limit outside \(\mathbb P\).</b> One time at a time: the amber share of a column tends to 0.</div></li>
+  <li class="arrow" aria-label="implies">\(\Rightarrow\)</li>
+  <li class="m-d"><div class="tag"><span><span class="dn">Def 8.3</span>In distribution</span> <span class="v" id="vD"></span></div>
+    <div class="f">\(F_{X_n}(x)\to F_X(x)\ \text{ at continuity points of } F_X\)</div>
+    <div class="words"><b>No outcomes at all.</b> Only the distribution functions are compared; the map plays no part.</div></li>
 </ul>
-<p class="chain">Recall: a real sequence converges, \(x_n\to x\), if for any tolerance \(\varepsilon>0\) it is eventually within \(\varepsilon\) of \(x\). Each mode applies that idea to a different real sequence built from \((X_n)\). Almost surely \(\Rightarrow\) in probability \(\Rightarrow\) in distribution.</p>
+<p class="chain">A real sequence converges if, for any tolerance \(\varepsilon>0\), it is eventually within \(\varepsilon\) of its limit. Each mode asks that of a different real sequence built from \((X_n)\).</p>
 
 <main>
   <section class="card text">
-    <h2>Choose a sequence</h2>
+    <h2>Seven examples, each with one job</h2>
     <div class="pick" id="pick" role="group" aria-label="Examples"></div>
 
     <div class="exs" id="exs">
-      <article class="ex" data-id="mean" data-group="Lectures 17 and 18" data-name="Sample mean \(\bar X_n\)">
+      <article class="ex" data-id="mean" data-group="1 · One natural example of each mode" data-role="In probability" data-name="sample mean \(\bar X_n\)" data-look="p,a">
+        <p class="point"><b>The point.</b> Convergence in probability looks at one time \(n\) at a time. The probability of being more than \(\varepsilon\) from the limit, \(\mathbb P(|\bar X_n-\mu|>\varepsilon)\), is an ordinary real sequence, and it tends to 0. This is the weak law of large numbers.</p>
         <div class="eq">\[\bar X_n=\frac1n\sum_{i=1}^n X_i,\qquad X=\mu,\]</div>
         <p>where \(X_1,X_2,\dots\) are independent fair coin flips (0 or 1), so \(\mu=\tfrac12\) and \(\sigma^2=\tfrac14\). An outcome \(\omega\) is a whole sequence of flips; the first view shows 300 of them.</p>
-        <p class="try"><b>Try</b> Press Play. The solid amber curve is the exact probability; the dashed curve is the Chebyshev bound \(\sigma^2/(n\varepsilon^2)\) from the proof of the weak law. Then watch single outcomes in the violet view. Which law is that view about?</p>
+        <p class="try"><b>Try</b> Press Play and watch the amber thin out, column by column. The solid amber curve is its exact share; the dashed curve is the Chebyshev bound \(\sigma^2/(n\varepsilon^2)\) from the proof. Now make \(\varepsilon\) smaller: the amber lasts longer, but the share still tends to 0. It must do so for <em>every</em> \(\varepsilon\).</p>
         <div class="why">
           <p class="w-p"><b>In probability: yes (Theorem 8.1, WLLN).</b> \(\mathbb E[\bar X_n]=\mu\) and \(\operatorname{Var}(\bar X_n)=\sigma^2/n\), so by Chebyshev \(\mathbb P(|\bar X_n-\mu|\ge\varepsilon)\le\dfrac{\sigma^2}{n\varepsilon^2}\to0\).</p>
           <p class="w-as"><b>Almost surely: yes (Theorem 8.2, SLLN).</b> With probability 1 the violet path is a convergent real sequence. This is a stronger statement and needs a different proof.</p>
@@ -125,10 +157,58 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg
         </div>
       </article>
 
-      <article class="ex" data-id="flip" data-group="Lectures 17 and 18" data-name="\(U\) and \(1-U\)">
+      <article class="ex" data-id="power" data-group="1 · One natural example of each mode" data-role="Almost surely" data-name="powers \(\omega^n\)" data-look="b">
+        <p class="point"><b>The point.</b> Almost sure convergence looks at one outcome at a time. Fix \(\omega\) and ask whether \(X_1(\omega),X_2(\omega),\dots\) converges as an ordinary real sequence. Here it does for every \(\omega\) except \(\omega=1\), and that exception has probability 0. That is what &ldquo;almost&rdquo; allows.</p>
+        <div class="eq">\[X_n(\omega)=\omega^n,\qquad X=0,\]</div>
+        <p>with \(\omega\) uniform on \([0,1]\).</p>
+        <p class="try"><b>Try</b> In the map, every row is amber for a while and then clear for good, except the very top edge \(\omega=1\). Drag \(\omega\) towards 1: the violet sequence takes longer and longer to enter the band, but it always does. Make \(\varepsilon\) smaller and check again.</p>
+        <div class="why">
+          <p class="w-as"><b>Almost surely: yes.</b> For every \(\omega<1\), \(\omega^n\to0\). The only exception is \(\omega=1\), a set of probability 0, which is why we do not ask for every \(\omega\).</p>
+          <p class="w-p"><b>In probability: yes.</b> \(\mathbb P(\omega^n>\varepsilon)=1-\varepsilon^{1/n}\to0\).</p>
+          <p class="w-d"><b>In distribution: yes.</b> \(F_{X_n}(x)=x^{1/n}\to1\) for every \(x\in(0,1]\).</p>
+        </div>
+      </article>
+
+      <article class="ex" data-id="nmin" data-group="1 · One natural example of each mode" data-role="In distribution" data-name="\(nM_n\) (Ex 8.3)" data-look="d">
+        <p class="point"><b>The point.</b> Convergence in distribution looks only at distribution functions. \(F_{nM_n}(x)\to1-e^{-x}\) at every \(x\), so \(nM_n\) converges in distribution to \(\text{Exp}(1)\). Nothing is compared outcome by outcome; there is not even an \(X(\omega)\) to compare with.</p>
+        <div class="eq">\[nM_n=\min_{i\le n}nX_i,\qquad \text{limit: } \text{Exp}(1).\]</div>
+        <p>\(\mathbb P(nM_n>x)=\big(1-\tfrac xn\big)^n\to e^{-x}\).</p>
+        <p class="try"><b>Try</b> Raise \(n\) and watch the green curve settle on the dashed \(1-e^{-x}\). Drag \(x\) to check any point you like. Then look at the violet view: does a single outcome settle? Does the definition care?</p>
+        <div class="why">
+          <p class="w-d"><b>In distribution: yes.</b> \(F_{nM_n}(x)=1-\big(1-\tfrac xn\big)^n\to1-e^{-x}\), the distribution function of \(\text{Exp}(1)\).</p>
+          <p class="w-n"><b>Almost surely and in probability: not asked.</b> The limit here is only a distribution; there is no \(X(\omega)\) on the same space to compare with. The violet path keeps jumping: the definition of convergence in distribution never looks at single outcomes.</p>
+        </div>
+      </article>
+
+      <article class="ex" data-id="min" data-group="2 · Why each arrow holds" data-role="Almost surely \(\Rightarrow\) in probability" data-name="minimum \(M_n\) (Ex 8.3)" data-look="a,b">
+        <p class="point"><b>The point.</b> If almost every sequence eventually stays within \(\varepsilon\) of the limit, then at a late time \(n\) only a few outcomes can still be outside. Here that is easy to see, because \(M_n(\omega)\) only ever decreases: an outcome is amber at time \(n\) exactly when its sequence has not yet entered the band. So the amber set can only shrink, and it shrinks to nothing.</p>
+        <div class="eq">\[M_n=\min_{i\le n}X_i,\qquad X_i\overset{\text{iid}}{\sim}U[0,1],\qquad X=0.\]</div>
+        <p>\(\mathbb P(M_n\le x)=1-(1-x)^n\) for \(x\in[0,1]\).</p>
+        <p class="try"><b>Try</b> In the map every row is amber up to some time and clear for ever after. Step \(n\) forward with +1: amber dots in the column view turn grey and never turn back. Rows clearing one after another is exactly what makes the column share fall.</p>
+        <div class="why">
+          <p class="w-as"><b>Almost surely: yes.</b> \(M_n(\omega)\) is decreasing in \(n\), and with probability 1 some \(X_i\) falls below any given \(\varepsilon\). After that the sequence stays in the band.</p>
+          <p class="w-p"><b>In probability: yes, as a consequence.</b> The amber set at time \(n\) is the set of outcomes not yet in the band. These sets decrease to a set of probability 0, so \(\mathbb P(M_n>\varepsilon)=(1-\varepsilon)^n\to0\). The general proof replaces &ldquo;outside at time \(n\)&rdquo; by &ldquo;outside at some time \(\ge n\)&rdquo;, which is also decreasing.</p>
+          <p class="w-d"><b>In distribution: yes.</b> \(1-(1-x)^n\to1\) for every \(x>0\), and it is 0 for \(x<0\): the distribution function of \(X\equiv0\).</p>
+        </div>
+      </article>
+
+      <article class="ex" data-id="gauss" data-group="2 · Why each arrow holds" data-role="In probability \(\Rightarrow\) in distribution" data-name="\(N(c+\frac1n,\frac1{n^2})\) (Ex 8.5)" data-look="p,d">
+        <p class="point"><b>The point.</b> If \(X_n\) is within \(\varepsilon\) of \(c\) with probability close to 1, then for \(x>c+\varepsilon\) almost all the probability lies below \(x\), so \(F_{X_n}(x)\) is close to 1; for \(x<c-\varepsilon\) it is close to 0. The one place nothing is forced is \(x=c\) itself, where \(F_X\) jumps. That is exactly the point the definition leaves out.</p>
+        <div class="eq">\[X_n\sim N\!\Big(c+\tfrac1n,\ \tfrac1{n^2}\Big),\qquad X=c,\qquad\text{here } c=1.\]</div>
+        <p>Built on \([0,1]\) as \(X_n(\omega)=c+\dfrac{1+\Phi^{-1}(\omega)}{n}\).</p>
+        <p class="try"><b>Try</b> Raise \(n\): the distribution concentrates on \(c\). The dashed amber curve is the bound \(2/(\varepsilon^2n^2)\). Then drag \(x\) in the green view onto \(c\) exactly. Does \(F_{X_n}(c)\) approach \(F_X(c)=1\)?</p>
+        <div class="why">
+          <p class="w-p"><b>In probability: yes.</b> \(\mathbb E[(X_n-c)^2]=\tfrac1{n^2}+\tfrac1{n^2}=\tfrac2{n^2}\), so \(\mathbb P(|X_n-c|>\varepsilon)\le\dfrac{2}{\varepsilon^2n^2}\to0\).</p>
+          <p class="w-d"><b>In distribution: yes, as a consequence.</b> For \(x>c\): \(\mathbb P(X_n\le x)\ge\mathbb P(|X_n-c|\le|x-c|)\to1\). For \(x<c\): \(\mathbb P(X_n\le x)\le\mathbb P(|X_n-c|>|x-c|)\to0\). At \(x=c\): \(F_{X_n}(c)=\Phi(-1)\approx0.16\) for every \(n\), not \(1=F_X(c)\), but \(c\) is not a continuity point of \(F_X\).</p>
+          <p class="w-as"><b>Almost surely: yes, for this construction.</b> \(X_n(\omega)\to c\) for every \(\omega\in(0,1)\).</p>
+        </div>
+      </article>
+
+      <article class="ex" data-id="flip" data-group="3 · Why neither arrow reverses" data-role="In distribution, not in probability" data-name="\(U\) and \(1-U\)" data-look="d,a">
+        <p class="point"><b>The point.</b> Having the same distribution says nothing about being close outcome by outcome. Every \(X_n\) is \(\text{Unif}[0,1]\), so the distribution functions do not move at all, yet \(X_n(\omega)\) and \(X_{n+1}(\omega)\) are far apart for most \(\omega\). So in distribution \(\not\Rightarrow\) in probability.</p>
         <div class="eq">\[X_{2k}=U,\qquad X_{2k+1}=1-U,\]</div>
         <p>with \(U\sim\text{Unif}[0,1]\) picked once and for all; here \(U(\omega)=\omega\). The views compare \(X_n\) with the candidate limit \(X=U\).</p>
-        <p class="try"><b>Try</b> Step \(n\) up one at a time. Which of the four views changes, and which never moves?</p>
+        <p class="try"><b>Try</b> Step \(n\) with +1 and &minus;1. The green view never moves. The map is striped: every other column is mostly amber, for ever, so no column share tends to 0 and no row clears.</p>
         <div class="why">
           <p class="w-d"><b>In distribution: yes.</b> \(X_n\sim\text{Unif}[0,1]\) for every \(n\), so \(F_{X_n}\) never changes.</p>
           <p class="w-p"><b>In probability: no.</b> \(|X_n-X_{n+1}|=|2U-1|>\varepsilon\) with probability \(1-\varepsilon\), for every \(n\). So \(X_n\) and \(X_{n+1}\) cannot both be close to the same \(X\), whatever \(X\) is.</p>
@@ -136,28 +216,20 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg
         </div>
       </article>
 
-      <article class="ex" data-id="min" data-group="Lectures 17 and 18" data-name="Minimum \(M_n\) (Ex 8.3)">
-        <div class="eq">\[M_n=\min_{i\le n}X_i,\qquad X_i\overset{\text{iid}}{\sim}U[0,1],\qquad X=0.\]</div>
-        <p>\(\mathbb P(M_n\le x)=1-(1-x)^n\) for \(x\in[0,1]\).</p>
-        <p class="try"><b>Try</b> Raise \(n\) and watch the green distribution function. Drag \(x\) in that view: for which \(x\) does \(F_{M_n}(x)\) tend to 1, and what happens at \(x=0\)?</p>
+      <article class="ex" data-id="block" data-group="3 · Why neither arrow reverses" data-role="In probability, not almost surely" data-name="sliding block" data-look="p,b">
+        <p class="point"><b>The point.</b> Rare is not the same as never again. At each time \(n\) the block where \(X_n=1\) is small, so \(\mathbb P(|X_n|>\varepsilon)\to0\). But the block keeps sweeping across \([0,1]\), so every single outcome is hit again and again, for ever, and no sequence \(X_n(\omega)\) converges. So in probability \(\not\Rightarrow\) almost surely, which is why the weak law is weaker than the strong law.</p>
+        <div class="eq">\[X_n=\mathbf 1_{A_n},\qquad X=0,\]</div>
+        <p>where \(A_n\) is an interval of length \(\tfrac1{n+1}\) that starts where \(A_{n-1}\) ended and wraps around \([0,1]\).</p>
+        <p class="try"><b>Try</b> In the map the block is a thin amber stripe climbing through the outcomes again and again. Read it by columns: less and less amber. Read it by rows: follow any row to the right and it keeps being hit. Press Play and watch your chosen \(\omega\) each time the block comes round.</p>
         <div class="why">
-          <p class="w-d"><b>In distribution: yes.</b> \(1-(1-x)^n\to1\) for every \(x>0\), and it is 0 for \(x<0\): the distribution function of \(X\equiv0\).</p>
-          <p class="w-p"><b>In probability: yes.</b> \(\mathbb P(M_n>\varepsilon)=(1-\varepsilon)^n\to0\).</p>
-          <p class="w-as"><b>Almost surely: yes.</b> \(M_n(\omega)\) is decreasing in \(n\), and by the line above it cannot stay above any \(\varepsilon\).</p>
+          <p class="w-as"><b>Almost surely: no.</b> The lengths \(\tfrac1{n+1}\) sum to infinity, so the block laps \([0,1]\) for ever and covers every \(\omega\) infinitely often.</p>
+          <p class="w-p"><b>In probability: yes.</b> \(\mathbb P(|X_n|>\varepsilon)=\tfrac1{n+1}\to0\) for \(\varepsilon<1\). Large errors become rare, but never stop.</p>
+          <p class="w-d"><b>In distribution: yes.</b> Implied by convergence in probability.</p>
         </div>
       </article>
 
-      <article class="ex" data-id="nmin" data-group="Lectures 17 and 18" data-name="Blown up: \(nM_n\) (Ex 8.3)">
-        <div class="eq">\[nM_n=\min_{i\le n}nX_i,\qquad \text{limit: } \text{Exp}(1).\]</div>
-        <p>\(\mathbb P(nM_n>x)=\big(1-\tfrac xn\big)^n\to e^{-x}\).</p>
-        <p class="try"><b>Try</b> Zooming in by a factor \(n\) stops the collapse onto 0. Watch the green curve settle on \(1-e^{-x}\). Now look at the violet view: does a single outcome settle?</p>
-        <div class="why">
-          <p class="w-d"><b>In distribution: yes.</b> \(F_{nM_n}(x)=1-\big(1-\tfrac xn\big)^n\to1-e^{-x}\), the distribution function of \(\text{Exp}(1)\).</p>
-          <p class="w-n"><b>Almost surely and in probability: not asked.</b> The limit here is only a distribution; there is no \(X(\omega)\) on the same space to compare with. The violet path keeps jumping: the definition of convergence in distribution never looks at single outcomes.</p>
-        </div>
-      </article>
-
-      <article class="ex" data-id="escape" data-group="Lectures 17 and 18" data-name="Unif\(\{1,\dots,n\}\) (Ex 8.4)">
+      <article class="ex" data-id="escape" data-group="More examples from the notes" data-role="No limit at all" data-name="Unif\(\{1,\dots,n\}\) (Ex 8.4)" data-look="d">
+        <p class="point"><b>The point.</b> Not every sequence of distributions converges. Here the probability mass escapes to infinity and the pointwise limit of the distribution functions is not a distribution function.</p>
         <div class="eq">\[X_n\sim\text{Unif}\{1,2,\dots,n\}\]</div>
         <p>built here as \(X_n(\omega)=\lceil n\omega\rceil\); the dependence between different \(n\) does not matter for the distribution.</p>
         <p class="try"><b>Try</b> Raise \(n\) and drag \(x\) in the green view. What does \(F_{X_n}(x)\) tend to, for each fixed \(x\)? Is the limit a distribution function?</p>
@@ -167,7 +239,8 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg
         </div>
       </article>
 
-      <article class="ex" data-id="stair" data-group="Lectures 17 and 18" data-name="Rescaled: \(Y_n=X_n/n\) (Ex 8.4)">
+      <article class="ex" data-id="stair" data-group="More examples from the notes" data-role="Discrete to continuous" data-name="\(Y_n=X_n/n\) (Ex 8.4)" data-look="d">
+        <p class="point"><b>The point.</b> Discrete random variables can converge in distribution to a continuous one. Mass functions are the wrong thing to compare; distribution functions are the right thing.</p>
         <div class="eq">\[Y_n=\frac{X_n}{n}\in[0,1],\qquad X_n\sim\text{Unif}\{1,\dots,n\};\qquad \text{limit: } \text{Unif}[0,1].\]</div>
         <p>Built here as \(Y_n(\omega)=\lceil n\omega\rceil/n\). The grey spikes in the green view are the mass function, height \(\tfrac1n\).</p>
         <p class="try"><b>Try</b> Raise \(n\) slowly. The spikes shrink to 0, yet the probability of an interval does not vanish, and the green staircase closes in on the diagonal.</p>
@@ -177,40 +250,8 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg
         </div>
       </article>
 
-      <article class="ex" data-id="gauss" data-group="Lectures 17 and 18" data-name="\(N(c+\frac1n,\frac1{n^2})\) (Ex 8.5)">
-        <div class="eq">\[X_n\sim N\!\Big(c+\tfrac1n,\ \tfrac1{n^2}\Big),\qquad X=c,\qquad\text{here } c=1.\]</div>
-        <p>Built on \([0,1]\) as \(X_n(\omega)=c+\dfrac{1+\Phi^{-1}(\omega)}{n}\).</p>
-        <p class="try"><b>Try</b> Raise \(n\): the distribution concentrates on \(c\). The dashed amber curve is the bound \(2/(\varepsilon^2n^2)\). Then drag \(x\) in the green view onto \(c\) exactly. Does \(F_{X_n}(c)\) approach \(F_X(c)=1\)?</p>
-        <div class="why">
-          <p class="w-p"><b>In probability: yes.</b> \(\mathbb E[(X_n-c)^2]=\tfrac1{n^2}+\tfrac1{n^2}=\tfrac2{n^2}\), so \(\mathbb P(|X_n-c|>\varepsilon)\le\dfrac{2}{\varepsilon^2n^2}\to0\).</p>
-          <p class="w-d"><b>In distribution: yes.</b> \(F_{X_n}(x)\to1\) for \(x>c\) and \(\to0\) for \(x<c\). At \(x=c\): \(F_{X_n}(c)=\Phi(-1)\approx0.16\) for every \(n\), not \(1=F_X(c)\). So pointwise convergence everywhere is too much to ask; \(c\) is not a continuity point of \(F_X\).</p>
-          <p class="w-as"><b>Almost surely: yes, for this construction.</b> \(X_n(\omega)\to c\) for every \(\omega\in(0,1)\).</p>
-        </div>
-      </article>
-
-      <article class="ex" data-id="power" data-group="Further examples (Section 8.5)" data-name="Powers \(\omega^n\)">
-        <div class="eq">\[X_n(\omega)=\omega^n,\qquad X=0,\]</div>
-        <p>with \(\omega\) uniform on \([0,1]\).</p>
-        <p class="try"><b>Try</b> Drag \(\omega\) towards 1. The closer it is, the longer the violet sequence takes to drop into the band. Does it always get there?</p>
-        <div class="why">
-          <p class="w-as"><b>Almost surely: yes.</b> For every \(\omega<1\), \(\omega^n\to0\). The only exception is \(\omega=1\), a set of probability 0, which is why we do not ask for every \(\omega\).</p>
-          <p class="w-p"><b>In probability: yes.</b> \(\mathbb P(\omega^n>\varepsilon)=1-\varepsilon^{1/n}\to0\).</p>
-          <p class="w-d"><b>In distribution: yes.</b> \(F_{X_n}(x)=x^{1/n}\to1\) for every \(x\in(0,1]\).</p>
-        </div>
-      </article>
-
-      <article class="ex" data-id="block" data-group="Further examples (Section 8.5)" data-name="Sliding block">
-        <div class="eq">\[X_n=\mathbf 1_{A_n},\qquad X=0,\]</div>
-        <p>where \(A_n\) is an interval of length \(\tfrac1{n+1}\) that starts where \(A_{n-1}\) ended and wraps around \([0,1]\).</p>
-        <p class="try"><b>Try</b> Press Play. The block gets narrower, so the amber curve falls. Now watch what the block does to your chosen \(\omega\) each time it comes round. This is why the weak law is called weak.</p>
-        <div class="why">
-          <p class="w-as"><b>Almost surely: no.</b> The lengths \(\tfrac1{n+1}\) sum to infinity, so the block laps \([0,1]\) for ever and covers every \(\omega\) infinitely often.</p>
-          <p class="w-p"><b>In probability: yes.</b> \(\mathbb P(|X_n|>\varepsilon)=\tfrac1{n+1}\to0\) for \(\varepsilon<1\). Large errors become rare, but never stop.</p>
-          <p class="w-d"><b>In distribution: yes.</b> Implied by convergence in probability.</p>
-        </div>
-      </article>
-
-      <article class="ex" data-id="noise1" data-group="Further examples (Section 8.5)" data-name="Cauchy noise \(/n\)">
+      <article class="ex" data-id="noise1" data-group="More examples from the notes" data-role="In probability, not almost surely" data-name="Cauchy noise \(/n\)" data-look="p,b">
+        <p class="point"><b>The point.</b> A second example of in probability but not almost surely, this time with independent noise and the second Borel&ndash;Cantelli lemma.</p>
         <div class="eq">\[X_n=\frac{\xi_n}{n},\qquad X=0,\]</div>
         <p>where \(\xi_1,\xi_2,\dots\) are independent standard Cauchy.</p>
         <p class="try"><b>Try</b> Follow one outcome in the violet view all the way to \(n=400\). Large errors get rarer. Do they stop? Compare with the next example.</p>
@@ -221,7 +262,8 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg
         </div>
       </article>
 
-      <article class="ex" data-id="noise2" data-group="Further examples (Section 8.5)" data-name="Cauchy noise \(/n^2\)">
+      <article class="ex" data-id="noise2" data-group="More examples from the notes" data-role="Almost surely" data-name="Cauchy noise \(/n^2\)" data-look="b">
+        <p class="point"><b>The point.</b> Damp the same noise faster and almost sure convergence returns, by the first Borel&ndash;Cantelli lemma.</p>
         <div class="eq">\[X_n=\frac{\xi_n}{n^2},\qquad X=0,\]</div>
         <p>where \(\xi_1,\xi_2,\dots\) are independent standard Cauchy.</p>
         <p class="try"><b>Try</b> Compare the amber curve with the previous example: both fall to 0. What is different about how fast, and what does that do to a single outcome?</p>
@@ -232,7 +274,8 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg
         </div>
       </article>
 
-      <article class="ex" data-id="cos" data-group="Further examples (Section 8.5)" data-name="Cosines \(\cos(2\pi n\omega)\)">
+      <article class="ex" data-id="cos" data-group="More examples from the notes" data-role="In distribution, not in probability" data-name="cosines \(\cos(2\pi n\omega)\)" data-look="d,a">
+        <p class="point"><b>The point.</b> A second example of in distribution only: identical distributions for every \(n\), while the functions themselves never settle.</p>
         <div class="eq">\[X_n(\omega)=\cos(2\pi n\omega)\]</div>
         <p>Candidate limit: \(X=X_1\).</p>
         <p class="try"><b>Try</b> Press Play. The wave gets faster and faster, yet one of the four views does not change at all. Which, and why?</p>
@@ -242,41 +285,43 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg
           <p class="w-d"><b>In distribution: yes.</b> Cut \([0,1]\) into \(n\) equal pieces; on each, \(X_n\) is a copy of \(X_1\). So every \(X_n\) has the same distribution function.</p>
         </div>
       </article>
+
     </div>
 
-    <div class="predict">
-      <button type="button" class="primary" id="reveal">Show the verdict</button>
-      <span id="revHint">Decide first: which of the three modes hold?</span>
-    </div>
-  </section>
+    </section>
 
   <section class="card stage">
     <div class="views">
-      <figure class="f-n">
-        <figcaption><b>Fix \(n\): \(X_n\) across the outcomes \(\omega\)</b>
-          <span id="subA1"></span><span id="subA2"></span></figcaption>
-        <canvas id="cA" tabindex="0" aria-label="X n across outcomes omega, with the outcomes where it is more than epsilon from the limit marked"></canvas>
+      <figure class="f-map" id="figM">
+        <figcaption><b>The map: every outcome \(\omega\) (rows) at every time \(n\) (columns)</b>
+          <span id="subM"></span></figcaption>
+        <canvas id="cM" tabindex="0" aria-label="Map of outcomes against time, shaded where X n is more than epsilon from the limit. Drag to choose the time n and the outcome omega."></canvas>
       </figure>
-      <figure class="f-as">
-        <figcaption><b>Fix \(\omega\): the real sequence \(X_1(\omega),X_2(\omega),\dots\)</b>
-          <span>Almost surely asks: is it eventually within \(\varepsilon\), for almost every \(\omega\)?</span>
-          <span class="num" id="outNow"></span></figcaption>
-        <canvas id="cB" aria-label="The sequence of values for the chosen outcome, plotted against n"></canvas>
+      <figure class="f-n" id="figA">
+        <figcaption><b>One time \(n\): a column of the map<span class="look">look here</span></b>
+          <span id="subA"></span></figcaption>
+        <canvas id="cA" aria-label="X n across outcomes omega at the chosen time"></canvas>
+      </figure>
+      <figure class="f-as" id="figB">
+        <figcaption><b>One outcome \(\omega\): a row of the map<span class="look">look here</span></b>
+          <span id="subB"></span></figcaption>
+        <canvas id="cB" aria-label="The real sequence X n of omega for the chosen outcome, plotted against n"></canvas>
       </figure>
       <figure class="f-p" id="figC">
-        <figcaption><b id="capC"></b><span id="subC1"></span><span id="subC2"></span></figcaption>
+        <figcaption><b><span id="capC"></span><span class="look">look here</span></b><span id="subC"></span></figcaption>
         <canvas id="cC" aria-label="A real sequence plotted against n: the probability that X n differs from the limit by more than epsilon, or the distribution function at the chosen point"></canvas>
       </figure>
-      <figure class="f-d">
-        <figcaption><b>Distribution functions</b>
-          <span>In distribution asks: does \(F_{X_n}(x)\) (solid) tend to \(F_X(x)\) (dashed)? Drag to move \(x\).</span>
-          <span class="num" id="fNow"></span></figcaption>
+      <figure class="f-d" id="figD">
+        <figcaption><b>Distribution functions: \(F_{X_n}\) solid, \(F_X\) dashed<span class="look">look here</span></b>
+          <span id="subD"></span></figcaption>
         <canvas id="cD" aria-label="Distribution function of X n and of the limit, with a movable point x"></canvas>
       </figure>
     </div>
     <div class="ctl">
       <label>\(n\) <input type="range" id="nS" min="1" max="400" step="1" value="6"><output id="nO">6</output></label>
+      <span><button type="button" class="mini" id="nM" aria-label="Previous n">&minus;1</button> <button type="button" class="mini" id="nP" aria-label="Next n">+1</button></span>
       <button type="button" id="play">Play</button>
+      <span class="seg" id="hz" role="group" aria-label="How far along the sequence to show"><button type="button" data-h="60" aria-pressed="false">n up to 60</button><button type="button" data-h="400" aria-pressed="true">n up to 400</button></span>
       <label>\(\varepsilon\) <input type="range" id="eS" min="0.02" max="0.9" step="0.01" value="0.25"><output id="eO">0.25</output></label>
       <label>\(\omega\) <input type="range" id="wS" min="0.001" max="0.999" step="0.001" value="0.62"><output id="wO">0.62</output></label>
       <button type="button" id="reset">Reset</button>
@@ -290,7 +335,7 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg
 "use strict";
 const $=id=>document.getElementById(id), PI=Math.PI, NMAX=400, G=2003, J=300;
 const FONT='"IBM Plex Sans", system-ui, sans-serif';
-const S={ex:'mean',n:6,eps:0.25,w:0.62,x:0.6,revealed:false};
+const S={ex:'mean',n:6,hz:400,eps:0.25,w:0.62,x:0.6,revealed:false};
 
 /* ---------- helpers ---------- */
 function invPhi(p){const a=[-39.69683028665376,220.9460984245205,-275.9285104469687,138.357751867269,-30.66479806614716,2.506628277459239],b=[-54.47609879822406,161.5858368580409,-155.6989798598866,66.80131188771972,-13.28068155288572],c=[-0.007784894002430293,-0.3223964580411365,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783],d=[0.007784695709041462,0.3224671290700398,2.445134137142996,3.754408661907416];
@@ -313,27 +358,27 @@ function binPmf(n){if(pmfCache[n])return pmfCache[n];const p=new Float64Array(n+
    as/p/d: verdicts (1 yes, 0 no, null not asked).  distOnly: there is no limit X(omega) to compare with. */
 const step=a=>x=>x>=a?1:0;
 const EX={
-  mean:{t:'seq',v:(j,n)=>meanSeq[j][n],lim:0.5,y:[0,1],yt:[0,0.5,1],as:1,p:1,d:1,x0:0.6,special:[0.5],
+  mean:{n0:20,hz:60,t:'seq',v:(j,n)=>meanSeq[j][n],lim:0.5,y:[0,1],yt:[0,0.5,1],as:1,p:1,d:1,x0:0.6,special:[0.5],
     pEx:(n,e)=>{const p=binPmf(n);let s=0;for(let k=0;k<=n;k++)if(Math.abs(k/n-0.5)>e)s+=p[k];return s},
     cdf:(n,x)=>{const p=binPmf(n);let s=0;for(let k=0;k<=n&&k/n<=x+1e-12;k++)s+=p[k];return Math.min(1,s)},
     atoms:n=>{const p=binPmf(n),o=[];for(let k=0;k<=n;k++)o.push([k/n,p[k]]);return o},lcdf:step(0.5),lstep:0.5,
     bound:(n,e)=>0.25/(n*e*e),boundName:'Chebyshev bound σ²/(nε²)'},
-  flip:{t:'om',f:(n,w)=>n%2===0?w:1-w,lim:w=>w,y:[0,1],yt:[0,0.5,1],as:0,p:0,d:1,x0:0.4,dots:true},
-  min:{t:'seq',v:(j,n)=>minSeq[j][n],lim:0,y:[0,1],yt:[0,0.5,1],as:1,p:1,d:1,x0:0.2,special:[0],
+  flip:{n0:7,hz:60,w0:0.8,t:'om',f:(n,w)=>n%2===0?w:1-w,lim:w=>w,y:[0,1],yt:[0,0.5,1],as:0,p:0,d:1,x0:0.4,dots:true},
+  min:{n0:6,hz:60,t:'seq',v:(j,n)=>minSeq[j][n],lim:0,y:[0,1],yt:[0,0.5,1],as:1,p:1,d:1,x0:0.2,special:[0],
     pEx:(n,e)=>Math.pow(1-e,n),cdf:(n,x)=>x<0?0:x>1?1:1-Math.pow(1-x,n),lcdf:step(0),lstep:0},
-  nmin:{t:'seq',v:(j,n)=>n*minSeq[j][n],lim:null,y:[0,6],yt:[0,2,4,6],as:null,p:null,d:1,x0:1,distOnly:true,
+  nmin:{n0:20,hz:400,t:'seq',v:(j,n)=>n*minSeq[j][n],lim:null,y:[0,6],yt:[0,2,4,6],as:null,p:null,d:1,x0:1,distOnly:true,
     cdf:(n,x)=>x<0?0:x>=n?1:1-Math.pow(1-x/n,n),lcdf:x=>x<0?0:1-Math.exp(-x),limName:'1 − e^(−x)'},
-  escape:{t:'om',f:(n,w)=>Math.max(1,Math.ceil(n*w)),lim:null,y:[0,40],yt:[0,10,20,30,40],as:0,p:0,d:0,x0:12,distOnly:true,noLimit:true},
-  stair:{t:'om',f:(n,w)=>Math.max(1,Math.ceil(n*w))/n,lim:w=>w,y:[0,1],yt:[0,0.5,1],as:1,p:1,d:1,x0:0.55,spikes:true},
-  gauss:{t:'om',f:(n,w)=>1+(1+invPhi(clamp(w,1e-6,1-1e-6)))/n,lim:w=>1,y:[-1,3],yt:[-1,0,1,2,3],as:1,p:1,d:1,x0:1.6,special:[1],
+  escape:{n0:12,hz:60,t:'om',f:(n,w)=>Math.max(1,Math.ceil(n*w)),lim:null,y:[0,40],yt:[0,10,20,30,40],as:0,p:0,d:0,x0:12,distOnly:true,noLimit:true},
+  stair:{n0:6,hz:60,t:'om',f:(n,w)=>Math.max(1,Math.ceil(n*w))/n,lim:w=>w,y:[0,1],yt:[0,0.5,1],as:1,p:1,d:1,x0:0.55,spikes:true},
+  gauss:{n0:4,hz:60,t:'om',f:(n,w)=>1+(1+invPhi(clamp(w,1e-6,1-1e-6)))/n,lim:w=>1,y:[-1,3],yt:[-1,0,1,2,3],as:1,p:1,d:1,x0:1.6,special:[1],
     bound:(n,e)=>2/(e*e*n*n),boundName:'bound 2/(ε²n²)'},
-  power:{t:'om',f:(n,w)=>Math.pow(w,n),lim:w=>0,y:[0,1],yt:[0,0.5,1],as:1,p:1,d:1,x0:0.3,special:[0]},
-  block:{t:'om',f:inBlock,lim:w=>0,y:[0,1],yt:[0,0.5,1],as:0,p:1,d:1,x0:0.5,special:[0]},
-  noise1:{t:'seq',v:(j,n)=>cauchy(j,n)/n,lim:0,y:[-1,1],yt:[-1,0,1],as:0,p:1,d:1,x0:0.3,special:[0],
+  power:{n0:8,hz:60,w0:0.9,t:'om',f:(n,w)=>Math.pow(w,n),lim:w=>0,y:[0,1],yt:[0,0.5,1],as:1,p:1,d:1,x0:0.3,special:[0]},
+  block:{n0:37,hz:400,t:'om',f:inBlock,lim:w=>0,y:[0,1],yt:[0,0.5,1],as:0,p:1,d:1,x0:0.5,special:[0]},
+  noise1:{n0:40,hz:400,t:'seq',v:(j,n)=>cauchy(j,n)/n,lim:0,y:[-1,1],yt:[-1,0,1],as:0,p:1,d:1,x0:0.3,special:[0],
     pEx:(n,e)=>1-2/PI*Math.atan(n*e),cdf:(n,x)=>0.5+Math.atan(n*x)/PI,lcdf:step(0),lstep:0},
-  noise2:{t:'seq',v:(j,n)=>cauchy(j,n)/(n*n),lim:0,y:[-1,1],yt:[-1,0,1],as:1,p:1,d:1,x0:0.3,special:[0],
+  noise2:{n0:40,hz:400,t:'seq',v:(j,n)=>cauchy(j,n)/(n*n),lim:0,y:[-1,1],yt:[-1,0,1],as:1,p:1,d:1,x0:0.3,special:[0],
     pEx:(n,e)=>1-2/PI*Math.atan(n*n*e),cdf:(n,x)=>0.5+Math.atan(n*n*x)/PI,lcdf:step(0),lstep:0},
-  cos:{t:'om',f:(n,w)=>Math.cos(2*PI*n*w),lim:w=>Math.cos(2*PI*w),y:[-1,1],yt:[-1,0,1],as:0,p:0,d:1,x0:0.3,dots:true}
+  cos:{n0:7,hz:60,t:'om',f:(n,w)=>Math.cos(2*PI*n*w),lim:w=>Math.cos(2*PI*w),y:[-1,1],yt:[-1,0,1],as:0,p:0,d:1,x0:0.3,dots:true}
 };
 const grid=new Float64Array(G);for(let i=0;i<G;i++)grid[i]=(i+0.5)/G;
 const E=()=>EX[S.ex], jSel=()=>Math.min(J-1,Math.floor(S.w*J));
@@ -362,6 +407,7 @@ function plot(cv,o){
   cv._map={l,rr,w,o};
   return {c,K,X,Y,w,h,l,rr,t,b,clip:()=>{c.save();c.beginPath();c.rect(l,t-2,w-l-rr,h-t-b+4);c.clip()}};
 }
+const nTicks=()=>S.hz===60?[1,10,20,30,40,50,60]:[1,100,200,300,400];
 const marker=(c,K,x,y,col)=>{c.beginPath();c.arc(x,y,6,0,2*PI);c.fillStyle=col;c.fill();c.lineWidth=2;c.strokeStyle=K.surface;c.stroke()};
 const vline=(c,K,x,y0,y1)=>{c.strokeStyle=K.ink;c.lineWidth=1;c.setLineDash([3,3]);c.beginPath();c.moveTo(x,y0);c.lineTo(x,y1);c.stroke();c.setLineDash([])};
 
@@ -388,11 +434,10 @@ function drawA(){
   c.strokeStyle=K.as;c.lineWidth=1.5;c.beginPath();c.moveTo(X(wx),P.t);c.lineTo(X(wx),h-b);c.stroke();
   marker(c,K,X(wx),cy(val(n,S.w)),K.as);
   c.restore();
-  $('subA1').textContent=seq?'Each dot is one outcome ω (a whole random sequence) at time n.':'Each point of [0,1] is an outcome ω; the curve is Xₙ.';
-  $('subA2').textContent=has?('Grey: within ε of the limit. Amber: |Xₙ − X| > ε, probability '+pExceed(n,eps).toFixed(3)):(e.noLimit?'No limit to compare with: the values run off to infinity.':'No X(ω) to compare with here: the limit is only a distribution.');
+  $('subA').textContent=(seq?'300 outcomes side by side. ':'')+(has?('Grey: within ε of the limit. Amber: |Xₙ − X| > ε, probability '+pExceed(n,eps).toFixed(3)+'.'):(e.noLimit?'No limit to compare with: the values run off to infinity.':'No X(ω) to compare with: the limit is only a distribution.'));
 }
 function drawB(){
-  const e=E(),P=plot($('cB'),{x0:0,x1:NMAX,y0:e.y[0],y1:e.y[1],yt:e.yt,xt:[1,100,200,300,400],xl:'n'}),{c,K,X,Y,h,b}=P,x0=limv(S.w),eps=S.eps,has=x0!==null;
+  const e=E(),P=plot($('cB'),{x0:0,x1:S.hz,y0:e.y[0],y1:e.y[1],yt:e.yt,xt:nTicks(),xl:'n'}),{c,K,X,Y,h,b}=P,x0=limv(S.w),eps=S.eps,has=x0!==null;
   const cy=v=>e.distOnly?Y(v):Y(clamp(v,e.y[0],e.y[1]));
   P.clip();
   if(has){c.fillStyle=K.ink;c.globalAlpha=.07;c.fillRect(X(0),Y(x0+eps),X(NMAX)-X(0),Y(x0-eps)-Y(x0+eps));c.globalAlpha=1;
@@ -400,13 +445,13 @@ function drawB(){
   const vs=[];for(let k=1;k<=NMAX;k++)vs[k]=val(k,S.w);
   if(!e.dots){c.strokeStyle=K.as;c.globalAlpha=.4;c.lineWidth=1;c.beginPath();for(let k=1;k<=NMAX;k++){k>1?c.lineTo(X(k),cy(vs[k])):c.moveTo(X(k),cy(vs[k]))}c.stroke();c.globalAlpha=1}
   let cnt=0,last=0;
-  for(let k=1;k<=NMAX;k++){const out=has&&Math.abs(vs[k]-x0)>eps;if(out){cnt++;last=k}c.fillStyle=out?K.prob:K.as;c.beginPath();c.arc(X(k),cy(vs[k]),out?3:1.8,0,2*PI);c.fill()}
+  const rr=S.hz===60?1.5:1;for(let k=1;k<=NMAX;k++){const out=has&&Math.abs(vs[k]-x0)>eps;if(out){cnt++;last=k}c.fillStyle=out?K.prob:K.as;c.beginPath();c.arc(X(k),cy(vs[k]),(out?3:1.8)*rr,0,2*PI);c.fill()}
   vline(c,K,X(S.n),P.t,h-b);marker(c,K,X(S.n),cy(vs[S.n]),K.as);
   c.restore();
-  $('outNow').textContent=!has?'No limit X(ω) to draw a band around':(cnt?('Outside the band '+cnt+' time'+(cnt>1?'s':'')+' by n = 400 (last: n = '+last+')'):'Never outside the band by n = 400');
+  $('subB').textContent='An ordinary real sequence. '+(!has?'No limit X(ω) to draw a band around.':(cnt?('Outside the band '+cnt+' time'+(cnt>1?'s':'')+' by n = 400; last at n = '+last+'.'):'Never outside the band by n = 400.'));
 }
 function drawC(){
-  const e=E(),dO=!!e.distOnly,P=plot($('cC'),{x0:0,x1:NMAX,y0:0,y1:1,yt:[0,0.5,1],xt:[1,100,200,300,400],xl:'n'}),{c,K,X,Y,h,b}=P,cur=getCurve(),col=dO?K.dist:K.prob;
+  const e=E(),dO=!!e.distOnly,P=plot($('cC'),{x0:0,x1:S.hz,y0:0,y1:1,yt:[0,0.5,1],xt:nTicks(),xl:'n'}),{c,K,X,Y,h,b}=P,cur=getCurve(),col=dO?K.dist:K.prob;
   P.clip();
   if(e.dots){c.fillStyle=col;for(let n=1;n<=NMAX;n++){c.beginPath();c.arc(X(n),Y(cur[n]),1.8,0,2*PI);c.fill()}}
   else{c.beginPath();c.moveTo(X(1),Y(0));for(let n=1;n<=NMAX;n++)c.lineTo(X(n),Y(cur[n]));c.lineTo(X(NMAX),Y(0));c.closePath();c.fillStyle=col;c.globalAlpha=.14;c.fill();c.globalAlpha=1;
@@ -415,10 +460,9 @@ function drawC(){
   if(dO){const t=FX(S.x);if(t!==null){c.strokeStyle=K.ink;c.lineWidth=1.5;c.setLineDash([5,4]);c.beginPath();c.moveTo(X(0),Y(t));c.lineTo(X(NMAX),Y(t));c.stroke();c.setLineDash([])}}
   vline(c,K,X(S.n),P.t,h-b);marker(c,K,X(S.n),Y(cur[S.n]),col);
   c.restore();
-  $('figC').className=dO?'f-d':'f-p';
-  $('capC').textContent=dO?'Fₙ(x) at the chosen x, against n':'P(|Xₙ − X| > ε) against n';
-  $('subC1').textContent=dO?'A real sequence for each x. In distribution asks: does it tend to F(x)?':'A real sequence for each ε. In probability asks: does it tend to 0?';
-  $('subC2').textContent=dO?(e.noLimit?'Here it tends to 0 for every x: not a distribution function.':'Dashed: the limit '+(e.limName||'F(x)')+' at this x.'):(e.bound?'Dashed: the '+e.boundName+'.':' ');
+  $('figC').className=(dO?'f-d':'f-p')+(LOOKC?' on':'');
+  $('capC').textContent=dO?'Fₙ(x) at the chosen x, against n':'P(|Xₙ − X| > ε): the amber share of each column';
+  $('subC').textContent=dO?(e.noLimit?'It tends to 0 for every x, which is not a distribution function.':'A real sequence for each x. Dashed: its limit '+(e.limName||'F(x)')+'.'):('A real sequence for each ε. Does it tend to 0?'+(e.bound?' Dashed: the '+e.boundName+'.':''));
 }
 function drawD(){
   const e=E(),[x0,x1]=xRange(),P=plot($('cD'),{x0,x1,y0:0,y1:1,yt:[0,0.5,1],xt:e.yt,xl:'x'}),{c,K,X,Y,h,b}=P,n=S.n;
@@ -443,39 +487,71 @@ function drawD(){
   if(lx!==null){c.beginPath();c.arc(X(S.x),Y(lx),4.5,0,2*PI);c.fillStyle=K.surface;c.fill();c.lineWidth=2;c.strokeStyle=K.ink;c.stroke()}
   marker(c,K,X(S.x),Y(fx),K.dist);
   c.restore();
-  $('fNow').textContent='At x = '+S.x.toFixed(2)+':  Fₙ(x) = '+fx.toFixed(3)+(lx!==null?',  F(x) = '+lx.toFixed(3):'');
+  $('subD').textContent='At x = '+S.x.toFixed(2)+':  Fₙ(x) = '+fx.toFixed(3)+(lx!==null?',  F(x) = '+lx.toFixed(3):'')+'.  Drag to move x.';
 }
-function draw(){drawA();drawB();drawC();drawD()}
+/* the map: rows are outcomes, columns are times; amber where |X_n - X| > eps */
+let mapImg=null,mKey='';
+function hexRGB(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
+function buildMap(K){
+  const e=E(),seq=e.t==='seq',R=seq?J:200,key=S.ex+'|'+S.eps+'|'+K.prob+K.ink;if(key===mKey)return;mKey=key;
+  if(!mapImg)mapImg=document.createElement('canvas');mapImg.width=NMAX;mapImg.height=R;
+  const c=mapImg.getContext('2d'),im=c.createImageData(NMAX,R),d=im.data,am=hexRGB(K.prob),ik=hexRGB(K.ink),has=e.lim!==null,span=e.y[1]-e.y[0];
+  for(let r=0;r<R;r++){const w=(r+0.5)/R,L=has?(seq?e.lim:e.lim(w)):0;
+    for(let n=1;n<=NMAX;n++){const v=seq?e.v(r,n):e.f(n,w),i=((R-1-r)*NMAX+(n-1))*4;
+      if(has){if(Math.abs(v-L)>S.eps){d[i]=am[0];d[i+1]=am[1];d[i+2]=am[2];d[i+3]=235}}
+      else{d[i]=ik[0];d[i+1]=ik[1];d[i+2]=ik[2];d[i+3]=Math.round(200*clamp((v-e.y[0])/span,0,1))}}}
+  c.putImageData(im,0,0);
+}
+function drawM(){
+  const e=E(),seq=e.t==='seq',P=plot($('cM'),{x0:0.5,x1:S.hz+0.5,y0:0,y1:1,yt:seq?[]:[0,1],xt:nTicks(),xl:'n'}),{c,K,X,Y,h,b,l}=P;
+  buildMap(K);
+  c.fillStyle=K.bg;c.fillRect(X(0.5),Y(1),X(S.hz+0.5)-X(0.5),Y(0)-Y(1));
+  c.imageSmoothingEnabled=S.hz===400;c.drawImage(mapImg,0,0,S.hz,mapImg.height,X(0.5),Y(1),X(S.hz+0.5)-X(0.5),Y(0)-Y(1));
+  if(seq){c.save();c.translate(l-14,(Y(0)+Y(1))/2);c.rotate(-PI/2);c.fillStyle=K.muted;c.font='12px '+FONT;c.textAlign='center';c.textBaseline='middle';c.fillText('300 outcomes ω',0,0);c.restore()}
+  else{c.fillStyle=K.muted;c.font='italic 13px '+FONT;c.textAlign='right';c.textBaseline='middle';c.fillText('ω',l-10,(Y(0)+Y(1))/2)}
+  const wy=seq?(jSel()+0.5)/J:S.w;
+  c.strokeStyle=K.ink;c.lineWidth=1.5;c.beginPath();c.moveTo(X(S.n),Y(1));c.lineTo(X(S.n),Y(0));c.stroke();
+  c.strokeStyle=K.as;c.lineWidth=1.5;c.beginPath();c.moveTo(X(0.5),Y(wy));c.lineTo(X(S.hz+0.5),Y(wy));c.stroke();
+  marker(c,K,X(S.n),Y(wy),K.as);
+  $('subM').textContent=e.lim!==null?'Amber: |Xₙ(ω) − X(ω)| > ε. In probability: each column’s amber share tends to 0. Almost surely: almost every row is eventually clear. Drag to pick n and ω.'
+    :'No limit X(ω) to compare with here, so nothing can be amber. Shading shows the size of Xₙ(ω) instead. Drag to pick n and ω.';
+}
+function draw(){drawM();drawA();drawB();drawC();drawD()}
 
 /* ---------- example picker and verdict ---------- */
-const exEls=[...document.querySelectorAll('.ex')],pick=$('pick');let lastGroup='';
-exEls.forEach(el=>{if(el.dataset.group!==lastGroup){lastGroup=el.dataset.group;const g=document.createElement('div');g.className='grp';g.textContent=lastGroup;pick.appendChild(g)}
-  const b=document.createElement('button');b.type='button';b.dataset.id=el.dataset.id;b.innerHTML=el.dataset.name;b.onclick=()=>setEx(el.dataset.id);pick.appendChild(b)});
+const exEls=[...document.querySelectorAll('.ex')],pick=$('pick');let lastGroup='',host=pick;
+exEls.forEach(el=>{if(el.dataset.group!==lastGroup){lastGroup=el.dataset.group;
+    if(lastGroup.indexOf('More')===0){const d=document.createElement('details'),sm=document.createElement('summary');sm.textContent=lastGroup;d.appendChild(sm);host=document.createElement('div');d.appendChild(host);pick.appendChild(d)}
+    else{const g=document.createElement('div');g.className='grp';g.textContent=lastGroup;pick.appendChild(g);host=pick}}
+  const b=document.createElement('button');b.type='button';b.dataset.id=el.dataset.id;b.innerHTML='<span class="role">'+el.dataset.role+'</span><span class="nm">'+el.dataset.name+'</span>';b.onclick=()=>setEx(el.dataset.id);host.appendChild(b)});
 function verdict(){
-  const e=E(),set=(id,ok,idle)=>{const el=$(id);el.className='v'+(S.revealed&&ok!==null?(ok?' yes':' no'):'');el.textContent=S.revealed?(ok===null?'not asked here':ok?'✓ converges':'✗ does not converge'):idle};
-  set('vAs',e.as,'strongest');set('vP',e.p,'');set('vD',e.d,'weakest');
-  $('exs').classList.toggle('revealed',S.revealed);
-  $('reveal').textContent=S.revealed?'Hide the verdict':'Show the verdict';
-  $('revHint').textContent=S.revealed?'':'Decide first: which of the three modes hold?';
+  const e=E(),set=(id,ok)=>{const el=$(id);el.className='v'+(ok===null?'':(ok?' yes':' no'));el.textContent=ok===null?'not asked here':ok?'\u2713 converges':'\u2717 does not converge'};
+  set('vAs',e.as);set('vP',e.p);set('vD',e.d);
 }
-function setEx(id){S.ex=id;S.revealed=false;S.x=EX[id].x0;
+function setEx(id){S.ex=id;if(typeof start==='function'){stop();start()}
   exEls.forEach(el=>el.classList.toggle('on',el.dataset.id===id));
   [...pick.querySelectorAll('button')].forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id));
+  const look=exEls.find(el=>el.dataset.id===id).dataset.look.split(',');
+  $('figA').classList.toggle('on',look.includes('a'));$('figB').classList.toggle('on',look.includes('b'));
+  $('figD').classList.toggle('on',look.includes('d'));LOOKC=look.includes('p')||(EX[id].distOnly&&look.includes('d'));
   verdict();draw()}
-$('reveal').onclick=()=>{S.revealed=!S.revealed;verdict()};
+let LOOKC=false;
 
 /* ---------- controls ---------- */
 let timer=0;
 const stop=()=>{clearInterval(timer);timer=0;$('play').textContent='Play'};
-const setN=n=>{S.n=clamp(Math.round(n),1,NMAX);$('nS').value=S.n;$('nO').textContent=S.n};
+const setN=n=>{S.n=clamp(Math.round(n),1,S.hz);$('nS').value=S.n;$('nO').textContent=S.n};
+const setHz=h=>{S.hz=h;$('nS').max=h;[...$('hz').children].forEach(b=>b.setAttribute('aria-pressed',+b.dataset.h===h));setN(S.n)};
+[...$('hz').children].forEach(b=>b.onclick=()=>{stop();setHz(+b.dataset.h);draw()});
 $('nS').oninput=e=>{stop();setN(+e.target.value);draw()};
 $('eS').oninput=e=>{S.eps=+e.target.value;$('eO').textContent=S.eps.toFixed(2);draw()};
 const setW=w=>{S.w=clamp(w,0.001,0.999);$('wS').value=S.w;$('wO').textContent=S.w.toFixed(2)};
 $('wS').oninput=e=>{setW(+e.target.value);draw()};
 const setX=x=>{const e=E(),[a,b]=xRange();let v=clamp(x,a,b);(e.special||[]).forEach(s=>{if(Math.abs(v-s)<(b-a)*0.025)v=s});S.x=v};
-$('play').onclick=()=>{if(timer){stop();return}if(S.n>=NMAX)setN(1);$('play').textContent='Pause';
-  timer=setInterval(()=>{setN(S.n+(S.n<40?1:S.n<120?2:4));draw();if(S.n>=NMAX)stop()},110)};
-$('reset').onclick=()=>{stop();setN(6);S.eps=0.25;$('eS').value=0.25;$('eO').textContent='0.25';setW(0.62);S.x=E().x0;draw()};
+$('play').onclick=()=>{if(timer){stop();return}if(S.n>=S.hz)setN(1);$('play').textContent='Pause';
+  timer=setInterval(()=>{setN(S.n+(S.hz===60||S.n<40?1:S.n<120?2:4));draw();if(S.n>=S.hz)stop()},S.hz===60?180:110)};
+const start=()=>{const e=E();setHz(e.hz);setN(e.n0);setW(e.w0||0.62);S.x=e.x0};
+$('reset').onclick=()=>{stop();S.eps=0.25;$('eS').value=0.25;$('eO').textContent='0.25';start();draw()};
 $('full').onclick=()=>{try{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();if(p&&p.catch)p.catch(()=>{})}catch(_){}};
 /* drag in the first view to choose the outcome, in the second or third to choose n, in the fourth to choose x */
 function dragger(cv,fn){let on=false;const go=e=>{const m=cv._map;if(!m)return;const r=cv.getBoundingClientRect(),t=(e.clientX-r.left-m.l)/(m.w-m.l-m.rr);fn(m.o.x0+clamp(t,0,1)*(m.o.x1-m.o.x0));draw()};
@@ -484,7 +560,14 @@ function dragger(cv,fn){let on=false;const go=e=>{const m=cv._map;if(!m)return;c
   cv.addEventListener('pointermove',e=>{if(on)go(e)});
   const end=()=>{on=false};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end)}
 dragger($('cA'),setW);dragger($('cB'),setN);dragger($('cC'),setN);dragger($('cD'),setX);
-$('cA').addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){setW(S.w+(e.key==='ArrowRight'?0.01:-0.01));draw();e.preventDefault()}});
+{const cv=$('cM');let on=false;cv.style.cursor='crosshair';
+  const go=e=>{const m=cv._map;if(!m)return;const r=cv.getBoundingClientRect();setN(m.o.x0+clamp((e.clientX-r.left-m.l)/(m.w-m.l-m.rr),0,1)*(m.o.x1-m.o.x0));setW(1-clamp((e.clientY-r.top-8)/(r.height-32),0,1));draw()};
+  cv.addEventListener('pointerdown',e=>{on=true;cv.setPointerCapture(e.pointerId);stop();go(e);e.preventDefault()});
+  cv.addEventListener('pointermove',e=>{if(on)go(e)});const end=()=>{on=false};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end)}
+$('nM').onclick=()=>{stop();setN(S.n-1);draw()};$('nP').onclick=()=>{stop();setN(S.n+1);draw()};
+document.addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA|BUTTON|SUMMARY/.test(e.target.tagName))return;
+  if(e.key==='ArrowRight'){stop();setN(S.n+1);draw();e.preventDefault()}if(e.key==='ArrowLeft'){stop();setN(S.n-1);draw();e.preventDefault()}
+  if(e.key==='ArrowUp'){setW(S.w+0.01);draw();e.preventDefault()}if(e.key==='ArrowDown'){setW(S.w-0.01);draw();e.preventDefault()}});
 
 new ResizeObserver(()=>draw()).observe(document.querySelector('.stage'));
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
